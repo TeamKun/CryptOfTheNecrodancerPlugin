@@ -1,0 +1,7 @@
+name: CryptOfNecromancer
+version: ${project.version}
+main: net.kunmc.lab.cryptofnecromancer.CryptOfNecromancer
+api-version: 1.15
+authors: [Peyang, YukiAt]
+description: Rythm Dance!
+website: https://kunmc.net/
