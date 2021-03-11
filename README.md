@@ -1,3 +1,3 @@
-# Crypt of Necromancer
+# CryptOfTheNecrodancerPlugin
 リズムで動きを制限！
 
