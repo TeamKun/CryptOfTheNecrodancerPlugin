@@ -24,18 +24,13 @@ public class Game
     }
 
     public void stop() {
-        if (timer == null) {
-            return;
-        }
 
-        timer.cancel();
-        timer = null;
     }
 
     private class GameTimer extends BukkitRunnable
     {
-        private final long bpm = (long) (song.getSpeed() * 15);
         private long prevTime = System.currentTimeMillis();
+        private final long bpm = (long) (song.getSpeed() * 7.67f);
 
         @Override
         public void run()
@@ -49,11 +44,11 @@ public class Game
             long currentTime = System.currentTimeMillis();
             long elapsedTime = currentTime - prevTime;
 
-            if (elapsedTime > 60 / bpm * 1000) {
+            if (elapsedTime > 60 * 1000 / bpm) {
                 Bukkit.getOnlinePlayers()
                         .forEach(player -> player.playSound(player.getLocation(),
                                 Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f));
-                prevTime = currentTime + elapsedTime - 60 / bpm * 1000;
+                prevTime = currentTime + elapsedTime - 60 * 1000 / bpm;
             }
         }
     }
