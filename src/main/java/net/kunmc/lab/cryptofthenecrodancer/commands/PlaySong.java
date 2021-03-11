@@ -1,12 +1,12 @@
-package net.kunmc.lab.cryptofnecromancer.commands;
+package net.kunmc.lab.cryptofthenecrodancer.commands;
 
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
-import net.kunmc.lab.cryptofnecromancer.CryptOfNecromancer;
-import net.kunmc.lab.cryptofnecromancer.enums.PlayType;
-import net.kunmc.lab.cryptofnecromancer.utils.URLUtils;
+import net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer;
+import net.kunmc.lab.cryptofthenecrodancer.enums.PlayType;
+import net.kunmc.lab.cryptofthenecrodancer.utils.URLUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -82,12 +82,12 @@ public class PlaySong implements CommandExecutor, TabCompleter
                 return true;
         }
 
-        if (CryptOfNecromancer.playingSong != null)
-            CryptOfNecromancer.playingSong.setPlaying(false);
+        if (CryptOfTheNecroDancer.playingSong != null)
+            CryptOfTheNecroDancer.playingSong.setPlaying(false);
 
         sender.sendMessage(ChatColor.GREEN + "再生中：" + song.getTitle());
 
-        CryptOfNecromancer.playingSong = player;
+        CryptOfTheNecroDancer.playingSong = player;
         player.setPlaying(true);
         player.setRepeatMode(RepeatMode.ONE);
 

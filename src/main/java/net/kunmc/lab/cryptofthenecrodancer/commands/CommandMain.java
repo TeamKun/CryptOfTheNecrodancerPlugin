@@ -1,4 +1,4 @@
-package net.kunmc.lab.cryptofnecromancer.commands;
+package net.kunmc.lab.cryptofthenecrodancer.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

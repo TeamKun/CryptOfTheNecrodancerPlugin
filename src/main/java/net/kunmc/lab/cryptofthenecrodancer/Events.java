@@ -1,4 +1,4 @@
-package net.kunmc.lab.cryptofnecromancer;
+package net.kunmc.lab.cryptofthenecrodancer;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,14 +10,14 @@ public class Events implements Listener
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {
-        if (CryptOfNecromancer.playingSong != null)
-            CryptOfNecromancer.playingSong.addPlayer(event.getPlayer());
+        if (CryptOfTheNecroDancer.playingSong != null)
+            CryptOfTheNecroDancer.playingSong.addPlayer(event.getPlayer());
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event)
     {
-        if (CryptOfNecromancer.playingSong != null)
-            CryptOfNecromancer.playingSong.removePlayer(event.getPlayer());
+        if (CryptOfTheNecroDancer.playingSong != null)
+            CryptOfTheNecroDancer.playingSong.removePlayer(event.getPlayer());
     }
 }

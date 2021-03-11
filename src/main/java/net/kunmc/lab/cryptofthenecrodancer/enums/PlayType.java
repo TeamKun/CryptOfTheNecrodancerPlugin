@@ -1,4 +1,4 @@
-package net.kunmc.lab.cryptofnecromancer.enums;
+package net.kunmc.lab.cryptofthenecrodancer.enums;
 
 public enum PlayType
 {

@@ -1,10 +1,9 @@
-package net.kunmc.lab.cryptofnecromancer.utils;
+package net.kunmc.lab.cryptofthenecrodancer.utils;
 
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 

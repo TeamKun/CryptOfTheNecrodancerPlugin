@@ -1,4 +1,4 @@
-package net.kunmc.lab.cryptofnecromancer.game;
+package net.kunmc.lab.cryptofthenecrodancer.game;
 
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;

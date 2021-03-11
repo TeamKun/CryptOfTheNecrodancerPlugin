@@ -1,4 +1,4 @@
-package net.kunmc.lab.cryptofnecromancer;
+package net.kunmc.lab.cryptofthenecrodancer;
 
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import org.bukkit.Bukkit;
@@ -20,7 +20,7 @@ public class Game
         }
 
         timer = new GameTimer();
-        timer.runTaskTimer(CryptOfNecromancer.plugin, (long) song.getDelay(), 1);
+        timer.runTaskTimer(CryptOfTheNecroDancer.plugin, (long) song.getDelay(), 1);
     }
 
     public void stop() {
@@ -35,7 +35,7 @@ public class Game
         @Override
         public void run()
         {
-            if (CryptOfNecromancer.playingSong == null)
+            if (CryptOfTheNecroDancer.playingSong == null)
             {
                 this.cancel();
                 return;
