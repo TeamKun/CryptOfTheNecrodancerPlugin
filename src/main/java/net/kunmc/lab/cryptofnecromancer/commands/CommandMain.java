@@ -14,16 +14,17 @@ public class CommandMain implements CommandExecutor, TabCompleter {
     private final List<CommandBase> commands = new ArrayList<>();
 
     public CommandMain() {
+        commands.add(new GameStart());
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("panelcraft.command")) {
+        if (!sender.hasPermission("crypt.command")) {
             return true;
         }
 
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "コマンドの引数が足りないようです...");
+            sender.sendMessage(ChatColor.RED + "コマンドの引数が足りないようです。");
             return true;
         }
 
@@ -44,7 +45,7 @@ public class CommandMain implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> result;
 
-        if (!sender.hasPermission("panelcraft.command")) {
+        if (!sender.hasPermission("crypt.command")) {
             return Collections.emptyList();
         }
 
