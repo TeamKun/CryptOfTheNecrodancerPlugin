@@ -1,8 +1,8 @@
-package net.kunmc.lab.cryptofnecromancer.game;
+package net.kunmc.lab.cryptofthenecrodancer.game;
 
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
-import net.kunmc.lab.cryptofnecromancer.CryptOfNecromancer;
+import net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -14,13 +14,13 @@ public class Sounds
     public static void startGame(Song song)
     {
 
-        if (CryptOfNecromancer.playingSong != null)
-            CryptOfNecromancer.playingSong.setPlaying(false);
+        if (CryptOfTheNecroDancer.playingSong != null)
+            CryptOfTheNecroDancer.playingSong.setPlaying(false);
 
-        CryptOfNecromancer.playingSong = new SongPlayer(song);
-        CryptOfNecromancer.playingSong.setRepeatMode(RepeatMode.ONE);
-        Bukkit.getOnlinePlayers().stream().parallel().forEach(CryptOfNecromancer.playingSong::addPlayer);
-        CryptOfNecromancer.playingSong.setPlaying(true);
+        CryptOfTheNecroDancer.playingSong = new SongPlayer(song);
+        CryptOfTheNecroDancer.playingSong.setRepeatMode(RepeatMode.ONE);
+        Bukkit.getOnlinePlayers().stream().parallel().forEach(CryptOfTheNecroDancer.playingSong::addPlayer);
+        CryptOfTheNecroDancer.playingSong.setPlaying(true);
 
         Bukkit.broadcastMessage("tempo:" + song.getSpeed());
         Bukkit.broadcastMessage("height:" + song.getSongHeight());
@@ -36,7 +36,7 @@ public class Sounds
                 if (!isStarted)
                     return;
 
-                if (CryptOfNecromancer.playingSong == null)
+                if (CryptOfTheNecroDancer.playingSong == null)
                 {
                     this.cancel();
                     return;
@@ -52,6 +52,6 @@ public class Sounds
                     prevTime = currentTime + elapsedTime - 60 * 1000 / bpm;
                 }
             }
-        }.runTaskTimer(CryptOfNecromancer.plugin, (long) song.getDelay(), 1);
+        }.runTaskTimer(CryptOfTheNecroDancer.plugin, (long) song.getDelay(), 1);
     }
 }

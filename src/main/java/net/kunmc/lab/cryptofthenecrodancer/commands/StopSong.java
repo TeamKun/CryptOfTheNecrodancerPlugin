@@ -1,6 +1,6 @@
-package net.kunmc.lab.cryptofnecromancer.commands;
+package net.kunmc.lab.cryptofthenecrodancer.commands;
 
-import net.kunmc.lab.cryptofnecromancer.CryptOfNecromancer;
+import net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,9 +16,9 @@ public class StopSong implements CommandExecutor
             sender.sendMessage(ChatColor.RED + "あなたには権限が有りません！");
             return true;
         }
-        if (CryptOfNecromancer.playingSong != null)
-            CryptOfNecromancer.playingSong.setPlaying(false);
-        CryptOfNecromancer.playingSong = null;
+        if (CryptOfTheNecroDancer.playingSong != null)
+            CryptOfTheNecroDancer.playingSong.setPlaying(false);
+        CryptOfTheNecroDancer.playingSong = null;
         sender.sendMessage(ChatColor.GREEN + "再生中の曲を停止しました。");
         return true;
     }

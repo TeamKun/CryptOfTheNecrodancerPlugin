@@ -1,8 +1,8 @@
-package net.kunmc.lab.cryptofnecromancer.commands;
+package net.kunmc.lab.cryptofthenecrodancer.commands;
 
 import com.xxmicloxx.NoteBlockAPI.model.Song;
-import net.kunmc.lab.cryptofnecromancer.game.Sounds;
-import net.kunmc.lab.cryptofnecromancer.utils.URLUtils;
+import net.kunmc.lab.cryptofthenecrodancer.game.Sounds;
+import net.kunmc.lab.cryptofthenecrodancer.utils.URLUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
