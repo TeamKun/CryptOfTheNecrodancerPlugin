@@ -5,3 +5,9 @@ api-version: 1.15
 authors: [Peyang, YukiAt]
 description: Rythm Dance!
 website: https://kunmc.net/
+commands:
+  crypt:
+    permission: CryptOfNecromancer.command
+permissions:
+  CryptOfNecromancer.command:
+    default: op
