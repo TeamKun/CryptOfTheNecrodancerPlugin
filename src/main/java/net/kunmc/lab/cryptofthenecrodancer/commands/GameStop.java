@@ -26,6 +26,7 @@ public class GameStop implements CommandBase
 
         CryptOfTheNecroDancer.currentGame.stop();
         CryptOfTheNecroDancer.currentGame = null;
+        sender.sendMessage(ChatColor.GREEN + "ゲームを正常に停止しました。");
 
         return true;
     }
