@@ -2,7 +2,6 @@ package net.kunmc.lab.cryptofthenecrodancer;
 
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
-import com.xxmicloxx.NoteBlockAPI.songplayer.NoteBlockSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import org.bukkit.Bukkit;
@@ -16,6 +15,7 @@ public class Game
     private final Song song;
     private GameTimer timer;
     private SongPlayer player;
+    private int timeSignature;
 
     public Game(Song song) {
         this.song = song;
@@ -26,11 +26,21 @@ public class Game
         if (timer != null)
             return;
 
+        byte ts = song.getTimeSignature();
+        int t = (ts & 0xFF) * 4;
+
         player = new RadioSongPlayer(song)
         {
             @Override
             public void playTick(Player player, int tick)
             {
+                if (++timeSignature > t)
+                {
+                    Bukkit.getOnlinePlayers()
+                            .forEach(p -> p.playSound(p.getLocation(),
+                                    Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f));
+                    timeSignature = 0;
+                }
                 hasStarted = true;
                 super.playTick(player, tick);
             }
@@ -43,7 +53,7 @@ public class Game
 
         player.setPlaying(true);
         timer = new GameTimer();
-        timer.runTaskTimer(CryptOfTheNecroDancer.plugin, (long) song.getDelay(), 1);
+        //timer.runTaskTimer(CryptOfTheNecroDancer.plugin, (long) song.getDelay(), 1);
     }
 
     public void stop() {
@@ -52,7 +62,7 @@ public class Game
         }
 
         player.setPlaying(false);
-        timer.cancel();
+        //timer.cancel();
         timer = null;
         hasStarted = false;
     }
