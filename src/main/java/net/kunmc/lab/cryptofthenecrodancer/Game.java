@@ -75,7 +75,7 @@ public class Game
     private class GameTimer extends BukkitRunnable
     {
         private long prevTime = System.currentTimeMillis();
-        private final long bpm = (long) (song.getSpeed() * 7.67f);
+        private final long bpm = (long) (song.getSpeed() * 7.5f);
 
         @Override
         public void run()
