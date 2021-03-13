@@ -3,6 +3,7 @@ package net.kunmc.lab.cryptofthenecrodancer;
 import com.xxmicloxx.NoteBlockAPI.model.RepeatMode;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.NoteBlockSongPlayer;
+import com.xxmicloxx.NoteBlockAPI.songplayer.RadioSongPlayer;
 import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -25,7 +26,7 @@ public class Game
         if (timer != null)
             return;
 
-        player = new NoteBlockSongPlayer(song)
+        player = new RadioSongPlayer(song)
         {
             @Override
             public void playTick(Player player, int tick)

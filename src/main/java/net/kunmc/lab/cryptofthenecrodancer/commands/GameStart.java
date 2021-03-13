@@ -1,7 +1,8 @@
 package net.kunmc.lab.cryptofthenecrodancer.commands;
 
 import com.xxmicloxx.NoteBlockAPI.model.Song;
-import net.kunmc.lab.cryptofthenecrodancer.game.Sounds;
+import net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer;
+import net.kunmc.lab.cryptofthenecrodancer.Game;
 import net.kunmc.lab.cryptofthenecrodancer.utils.URLUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -48,7 +49,9 @@ public class GameStart implements CommandBase
             return true;
         }
 
-        Sounds.startGame(song);
+        Game game = new Game(song);
+        game.startGame();
+        CryptOfTheNecroDancer.currentGame = game;
         return true;
     }
 

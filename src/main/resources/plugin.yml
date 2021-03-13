@@ -1,4 +1,4 @@
-name: CryptOfNecromancerPlugin
+name: CryptOfNecroDancerPlugin
 version: ${project.version}
 prefix: CONP
 main: net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer

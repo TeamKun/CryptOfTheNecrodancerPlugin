@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.kunmc.lab</groupId>
-    <artifactId>CryptOfNecromancer</artifactId>
+    <artifactId>CryptOfNecroDancerPlugin</artifactId>
     <version>0.1a</version>
     <packaging>jar</packaging>
 
-    <name>CryptOfNecromancer</name>
+    <name>CryptOfNecroDancerPlugin</name>
 
     <description>Rhythm Dance!</description>
     <properties>
