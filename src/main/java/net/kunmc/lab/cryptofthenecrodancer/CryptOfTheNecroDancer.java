@@ -1,18 +1,18 @@
 package net.kunmc.lab.cryptofthenecrodancer;
 
-import com.xxmicloxx.NoteBlockAPI.songplayer.SongPlayer;
+import net.kunmc.lab.cryptofthenecrodancer.commands.CommandMain;
 import net.kunmc.lab.cryptofthenecrodancer.commands.PlaySong;
 import net.kunmc.lab.cryptofthenecrodancer.commands.StopSong;
 import org.bukkit.Bukkit;
-import net.kunmc.lab.cryptofthenecrodancer.commands.CommandMain;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import java.util.logging.Logger;
 
 public class CryptOfTheNecroDancer extends JavaPlugin
 {
     public static Logger logger;
     public static CryptOfTheNecroDancer plugin;
-    public static SongPlayer playingSong;
+    public static Game currentGame;
 
     @Override
     public void onEnable()

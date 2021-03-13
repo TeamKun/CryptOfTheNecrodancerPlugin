@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 public class PlaySong implements CommandExecutor, TabCompleter
 {
+    public static SongPlayer currentSong;
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -82,12 +83,12 @@ public class PlaySong implements CommandExecutor, TabCompleter
                 return true;
         }
 
-        if (CryptOfTheNecroDancer.playingSong != null)
-            CryptOfTheNecroDancer.playingSong.setPlaying(false);
+        if (currentSong != null)
+            currentSong.setPlaying(false);
 
         sender.sendMessage(ChatColor.GREEN + "再生中：" + song.getTitle());
 
-        CryptOfTheNecroDancer.playingSong = player;
+        currentSong = player;
         player.setPlaying(true);
         player.setRepeatMode(RepeatMode.ONE);
 

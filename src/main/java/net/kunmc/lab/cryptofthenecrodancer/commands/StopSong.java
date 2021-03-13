@@ -16,9 +16,9 @@ public class StopSong implements CommandExecutor
             sender.sendMessage(ChatColor.RED + "あなたには権限が有りません！");
             return true;
         }
-        if (CryptOfTheNecroDancer.playingSong != null)
-            CryptOfTheNecroDancer.playingSong.setPlaying(false);
-        CryptOfTheNecroDancer.playingSong = null;
+        if (PlaySong.currentSong != null)
+            PlaySong.currentSong.setPlaying(false);
+        PlaySong.currentSong = null;
         sender.sendMessage(ChatColor.GREEN + "再生中の曲を停止しました。");
         return true;
     }

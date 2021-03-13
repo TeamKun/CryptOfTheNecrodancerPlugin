@@ -15,6 +15,7 @@ public class CommandMain implements CommandExecutor, TabCompleter {
 
     public CommandMain() {
         commands.add(new GameStart());
+        commands.add(new GameStop());
     }
 
     @Override
