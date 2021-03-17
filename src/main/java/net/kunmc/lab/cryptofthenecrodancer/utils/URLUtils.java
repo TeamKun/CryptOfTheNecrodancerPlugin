@@ -1,41 +1,34 @@
 package net.kunmc.lab.cryptofthenecrodancer.utils;
 
-import com.xxmicloxx.NoteBlockAPI.model.Song;
-import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
+import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class URLUtils
 {
-    public static Song asSong(URL url)
-    {
-        HttpURLConnection con = null;
-        try
-        {
+    public static Music asMusic(URL url) {
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
 
-            con = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
 
-            con.setDoOutput(true);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", "Mozilla/8.10; Safari/Chrome/Opera/Edge/KungleBot-Peyang; Mobile-Desktop");
+            connection.connect();
 
-            con.setRequestMethod("GET");
-            con.setRequestProperty("User-Agent", "Mozilla/8.10; Safari/Chrome/Opera/Edge/KungleBot-Peyang; Mobile-Desktop");
-            con.connect();
-
-            try(InputStream s = con.getInputStream())
-            {
-                return NBSDecoder.parse(s);
+            try (InputStream stream = connection.getInputStream()) {
+                return new Music(stream);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (IOException e) {
             return null;
-        }
-        finally
-        {
-            if (con != null)
-                con.disconnect();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
     }
 }

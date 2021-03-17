@@ -10,14 +10,16 @@ public class Events implements Listener
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {
-        if (CryptOfTheNecroDancer.currentGame != null && CryptOfTheNecroDancer.currentGame.isStarted())
-            CryptOfTheNecroDancer.currentGame.addPlayer(event.getPlayer());
+        if (CryptOfTheNecroDancer.game != null && CryptOfTheNecroDancer.game.isRunning()) {
+            CryptOfTheNecroDancer.game.addPlayer(event.getPlayer());
+        }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event)
     {
-        if (CryptOfTheNecroDancer.currentGame != null && CryptOfTheNecroDancer.currentGame.isStarted())
-            CryptOfTheNecroDancer.currentGame.removePlayer(event.getPlayer());
+        if (CryptOfTheNecroDancer.game != null && CryptOfTheNecroDancer.game.isRunning()) {
+            CryptOfTheNecroDancer.game.removePlayer(event.getPlayer());
+        }
     }
 }

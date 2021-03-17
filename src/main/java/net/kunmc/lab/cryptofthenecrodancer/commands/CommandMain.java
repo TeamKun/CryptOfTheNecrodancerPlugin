@@ -14,8 +14,8 @@ public class CommandMain implements CommandExecutor, TabCompleter {
     private final List<CommandBase> commands = new ArrayList<>();
 
     public CommandMain() {
-        commands.add(new GameStart());
-        commands.add(new GameStop());
+        commands.add(new CommandStart());
+        commands.add(new CommandStop());
     }
 
     @Override

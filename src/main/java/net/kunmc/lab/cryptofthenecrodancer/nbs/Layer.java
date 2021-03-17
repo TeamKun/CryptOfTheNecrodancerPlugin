@@ -1,4 +1,4 @@
-package net.kunmc.lab.cryptofthenecrodancer.player;
+package net.kunmc.lab.cryptofthenecrodancer.nbs;
 
 import java.util.HashMap;
 

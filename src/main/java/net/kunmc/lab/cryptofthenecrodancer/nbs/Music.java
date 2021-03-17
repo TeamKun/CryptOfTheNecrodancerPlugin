@@ -1,4 +1,4 @@
-package net.kunmc.lab.cryptofthenecrodancer.player;
+package net.kunmc.lab.cryptofthenecrodancer.nbs;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -6,40 +6,40 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 public class Music {
-    private byte version;
-    private byte instrument;
-    private short length;
-    private short layerCount;
-    private String title;
-    private String author;
-    private String originalAuthor;
-    private String description;
-    private short tempo;
-    private boolean autoSave;
-    private byte autoSaveDuration;
-    private byte timeSignature;
-    private int minutesSpent;
-    private int leftClicks;
-    private int rightClicks;
-    private int noteBlockAdded;
-    private int noteBlockRemoved;
-    private String importedFileName;
-    private boolean enableLoop;
-    private byte maxLoopCount;
-    private short loopStartTick;
-    private HashMap<Integer, Layer> layers;
-    private boolean isStereo;
+    private final byte version;
+    private final byte instrument;
+    private final short length;
+    private final short layerCount;
+    private final String title;
+    private final String author;
+    private final String originalAuthor;
+    private final String description;
+    private final float tempo;
+    private final boolean autoSave;
+    private final byte autoSaveDuration;
+    private final byte timeSignature;
+    private final int minutesSpent;
+    private final int leftClicks;
+    private final int rightClicks;
+    private final int noteBlockAdded;
+    private final int noteBlockRemoved;
+    private final String importedFileName;
+    private final boolean enableLoop;
+    private final byte maxLoopCount;
+    private final short loopStartTick;
+    private final HashMap<Integer, Layer>  layers = new HashMap<>();
+    private final boolean isStereo;
 
     public Music(InputStream inputStream) throws IOException {
         DataInputStream stream = new DataInputStream(inputStream);
+        short length = 0;
+        boolean isStereo = false;
 
         if (stream.readShort() == 0) {
             version = stream.readByte();
             instrument = stream.readByte();
             if (version >= 3) {
                 length = stream.readShort();
-            } else {
-                length = 0;
             }
         } else {
             version = 0;
@@ -52,7 +52,7 @@ public class Music {
         author = readString(stream);
         originalAuthor = readString(stream);
         description = readString(stream);
-        tempo = stream.readShort();
+        tempo = stream.readShort() / 100.0f;
         autoSave = stream.readBoolean();
         autoSaveDuration = stream.readByte();
         timeSignature = stream.readByte();
@@ -130,6 +130,8 @@ public class Music {
             }
         }
 
+        this.length = length;
+        this.isStereo = isStereo;
         // custom instrument
     }
 
@@ -161,13 +163,15 @@ public class Music {
         return description;
     }
 
-    public short getTempo() {
+    public float getTempo() {
         return tempo;
     }
 
     public byte getTimeSignature() {
         return timeSignature;
     }
+
+    public HashMap<Integer, Layer> getLayers() { return layers; }
 
     public boolean isStereo() {
         return isStereo;
