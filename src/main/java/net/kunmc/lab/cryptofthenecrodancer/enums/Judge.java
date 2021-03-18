@@ -5,8 +5,7 @@ public enum Judge
     PERFECT(20),
     GREAT(80),
     GOOD(120),
-    MISS(-1),
-    SKIP(-1);
+    MISS(-1);
 
     /*
      * ジャッジの当たり判定(ms)

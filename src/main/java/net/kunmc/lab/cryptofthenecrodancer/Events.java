@@ -50,7 +50,7 @@ public class Events implements Listener
             return;
         }
 
-        switch (CryptOfTheNecroDancer.game.judge())
+        switch (CryptOfTheNecroDancer.game.judge(event.getPlayer()))
         {
             case PERFECT:
                 event.getPlayer().sendMessage("PERFECT");

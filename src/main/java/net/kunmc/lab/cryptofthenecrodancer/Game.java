@@ -7,17 +7,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class Game
 {
     private final Music music;
     private final List<Player> players;
+    private final List<Player> activePlayers;
+    private final List<Player> judgedPlayers;
     private final Lock lock = new ReentrantLock();
     private boolean running;
     private MusicPlayer musicPlayer;
@@ -28,6 +32,8 @@ public class Game
     {
         this.music = music;
         players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        activePlayers = new ArrayList<>();
+        judgedPlayers = new ArrayList<>();
         running = false;
         judgeTime1 = -1;
         judgeTime2 = -1;
@@ -78,8 +84,7 @@ public class Game
         lock.lock();
         try
         {
-            if (players.contains(player))
-                players.remove(player);
+            players.remove(player);
         }
         finally
         {
@@ -87,8 +92,17 @@ public class Game
         }
     }
 
-    public Judge judge()
+    public List<Player> getNotJudgedPlayers()
     {
+        return activePlayers.stream().parallel().filter(player -> !judgedPlayers.contains(player)).collect(Collectors.toList());
+    }
+
+    public Judge judge(Player p)
+    {
+        if (!activePlayers.contains(p))
+            activePlayers.add(p);
+        judgedPlayers.add(p);
+
         long time1 = Math.abs(System.currentTimeMillis() - judgeTime1);
         long time2 = Math.abs(System.currentTimeMillis() - judgeTime2);
 
@@ -148,6 +162,11 @@ public class Game
                     players.forEach(player -> {
                         play(player, tick);
                     });
+                    if (tick % (music.getTimeSignature() * 2) == 0)
+                    {
+                        onBeat(null);
+                        judgedPlayers.clear();
+                    }
                 }
                 finally
                 {
@@ -167,14 +186,25 @@ public class Game
             }
         }
 
+        private void onBeat(Player player)
+        {
+            if (player != null)
+            {
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f);
+                return;
+            }
+
+            getNotJudgedPlayers().stream().map(a -> "BEAT-SKIP").forEach(Bukkit::broadcastMessage);
+        }
+
         private void play(Player player, int tick)
         {
             if (tick % (music.getTimeSignature() * 2) == 0)
             {
-                // メトロノーム
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f);
+                // メトロノーム(メソッド分ける)
                 judgeTime1 = System.currentTimeMillis();
                 judgeTime2 = judgeTime1 + (long) (1000 / music.getTempo() * music.getTimeSignature() * 2);
+                onBeat(player);
             }
 
             music.getLayers().values().stream()
