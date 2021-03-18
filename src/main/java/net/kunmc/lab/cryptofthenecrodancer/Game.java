@@ -95,15 +95,10 @@ public class Game {
                 Sound.BLOCK_NOTE_BLOCK_BIT,
                 Sound.BLOCK_NOTE_BLOCK_BANJO
         );
-        private final Consumer<Player> function;
         private int tick;
 
         public MusicPlayer() {
-            this(null);
-        }
 
-        public MusicPlayer(Consumer<Player> function) {
-            this.function = function;
         }
 
         @Override
@@ -114,13 +109,12 @@ public class Game {
                 lock.lock();
                 try {
                     if (tick > music.getLength()) {
+                        running = false;
                         return;
                     }
 
                     players.forEach(player -> {
-                        if (function != null) {
-                            function.accept(player);
-                        }
+                        judge(player, tick);
                         play(player, tick);
                     });
                 } finally {
@@ -128,7 +122,7 @@ public class Game {
                 }
 
                 try {
-                    if ((long) (1000 / music.getTempo()) - (System.currentTimeMillis() - startTime) > 0) {
+                    if ((1000 / music.getTempo()) > (System.currentTimeMillis() - startTime)) {
                         Thread.sleep((long) (1000 / music.getTempo()) - (System.currentTimeMillis() - startTime));
                     }
                 } catch (InterruptedException e) {
@@ -148,8 +142,14 @@ public class Game {
                             sound = instruments.get(note.getInstrument());
                         }
                         float volume = layer.getVolume() * note.getVolume();
-                        player.playSound(player.getLocation(), sound, note.getVolume(), note.getPitch());
+                        player.playSound(player.getLocation(), sound, volume, note.getTransposedPitch());
                     });
+        }
+
+        private void judge(Player player, int tick) {
+            if (tick % (music.getTimeSignature() * 2) == 0) {
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f);
+            }
         }
     }
 }

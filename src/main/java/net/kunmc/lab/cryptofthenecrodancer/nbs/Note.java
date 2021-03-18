@@ -1,6 +1,16 @@
 package net.kunmc.lab.cryptofthenecrodancer.nbs;
 
 public class Note {
+    private static float[] pitches;
+
+    static {
+        pitches = new float[2401];
+
+        for (int i = 0; i < pitches.length; i++) {
+            pitches[i] = (float) Math.pow(2, (i - 1200d) / 1200d);
+        }
+    }
+
     private byte instrument;
     private byte key;
     private byte volume;
@@ -41,6 +51,17 @@ public class Note {
 
     public void setPitch(short pitch) {
         this.pitch = pitch;
+    }
+
+    public float getTransposedPitch() {
+        short pitch = (short) (this.pitch + key * 100);
+
+        while (pitch < 3300) pitch += 1200;
+        while (pitch > 5700) pitch -= 1200;
+
+        pitch -= 3300;
+
+        return pitches[pitch];
     }
 
     public byte getVolume() {

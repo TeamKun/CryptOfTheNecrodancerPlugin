@@ -11,27 +11,9 @@ website: https://kunmc.net/
 commands:
   crypt:
     description: メインコマンド
-  playsong:
-    description: デバッグコマンド
-  stopsong:
-    description: デバッグコマンド
 permissions:
-  crypt:
-    description: このプラグインのすべての権限
-    children:
-      con.dbg: true
-    default: op
   crypt.command:
-    description: このプラグインｋコマンド権限
+    description: このプラグインのコマンド権限
     children:
       con.dbg: true
     default: op
-  crypt.dbg:
-    description: このプラグインのデバッグ権限
-    default: op
-    children:
-      con.dbg.play: true
-  crypt.dbg.playsong:
-    description: 曲を再生する。
-  crypt.dbg.stopsong:
-    description: 曲を停止する。
