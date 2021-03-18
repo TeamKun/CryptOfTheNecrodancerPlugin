@@ -1,6 +1,7 @@
 package net.kunmc.lab.cryptofthenecrodancer;
 
 import net.kunmc.lab.cryptofthenecrodancer.commands.CommandMain;
+import net.kunmc.lab.cryptofthenecrodancer.utils.TitleNotification;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,6 +12,7 @@ public class CryptOfTheNecroDancer extends JavaPlugin
     public static Logger logger;
     public static CryptOfTheNecroDancer plugin;
     public static Game game;
+    public static TitleNotification titleShower;
 
     @Override
     public void onEnable()
@@ -23,6 +25,8 @@ public class CryptOfTheNecroDancer extends JavaPlugin
         getServer().getPluginCommand("crypt").setTabCompleter(command);
 
         Bukkit.getPluginManager().registerEvents(new Events(), this);
+
+        titleShower = new TitleNotification();
 
         logger.info("Crypt of the NecroDancer Plugin は正常にアクティベートされました！");
     }

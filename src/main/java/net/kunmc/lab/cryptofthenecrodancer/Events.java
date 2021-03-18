@@ -1,5 +1,9 @@
 package net.kunmc.lab.cryptofthenecrodancer;
 
+import net.kunmc.lab.cryptofthenecrodancer.judger.ActionType;
+import net.kunmc.lab.cryptofthenecrodancer.judger.Judge;
+import net.kunmc.lab.cryptofthenecrodancer.judger.JudgeResult;
+import net.kunmc.lab.cryptofthenecrodancer.judger.Judger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,23 +54,10 @@ public class Events implements Listener
             return;
         }
 
-        switch (CryptOfTheNecroDancer.game.judge(event.getPlayer()))
-        {
-            case PERFECT:
-                event.getPlayer().sendMessage("PERFECT");
-                break;
-            case GREAT:
-                event.getPlayer().sendMessage("GREAT");
-                break;
-            case GOOD:
-                event.getPlayer().sendMessage("GOOD");
-                break;
-            case MISS:
-                event.getPlayer().sendMessage("MISS");
-                break;
-            default:
-                break;
-        }
+        JudgeResult result = Judger.onPlayerAction(ActionType.MOVE_GROUND, event.getPlayer());
+
+        if (result.isCancel)
+            event.setCancelled(true);
 
         lastMoveTime.put(event.getPlayer(), current);
     }

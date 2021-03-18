@@ -1,13 +1,14 @@
 package net.kunmc.lab.cryptofthenecrodancer;
 
-import net.kunmc.lab.cryptofthenecrodancer.enums.Judge;
+import net.kunmc.lab.cryptofthenecrodancer.judger.Judge;
+import net.kunmc.lab.cryptofthenecrodancer.judger.Judger;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Note;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitTask;
+import org.junit.internal.builders.IgnoredBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -195,7 +196,10 @@ public class Game
                 return;
             }
 
-            getNotJudgedPlayers().stream().map(a -> "BEAT-SKIP").forEach(Bukkit::broadcastMessage);
+            getNotJudgedPlayers()
+                    .stream()
+                    .parallel()
+                    .forEach(p -> Judger.showTitleAndActionbar(p, Judge.BEAT_SKIP));
         }
 
         private void play(Player player, int tick)
