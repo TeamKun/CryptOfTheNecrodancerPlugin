@@ -85,6 +85,7 @@ public class Game
         try
         {
             players.remove(player);
+            activePlayers.remove(player);
         }
         finally
         {
