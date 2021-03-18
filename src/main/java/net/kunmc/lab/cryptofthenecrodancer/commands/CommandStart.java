@@ -39,10 +39,13 @@ public class CommandStart implements CommandBase {
             return true;
         }
 
-        if (music != null) {
-            CryptOfTheNecroDancer.game = new Game(music);
-            CryptOfTheNecroDancer.game.run();
+        if (music == null) {
+            sender.sendMessage(ChatColor.RED + "曲が読み込めません！");
         }
+
+        CryptOfTheNecroDancer.game = new Game(music);
+        CryptOfTheNecroDancer.game.run();
+        sender.sendMessage(ChatColor.GREEN + "ゲームを開始します！");
 
         return true;
     }

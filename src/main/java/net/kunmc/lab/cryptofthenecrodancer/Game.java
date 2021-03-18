@@ -2,6 +2,7 @@ package net.kunmc.lab.cryptofthenecrodancer;
 
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Note;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -15,14 +16,15 @@ import java.util.function.Consumer;
 
 public class Game {
     private final Music music;
-    private final List<Player> players = new ArrayList<>();
+    private final List<Player> players;
     private final Lock lock = new ReentrantLock();
     private boolean running;
     private MusicPlayer musicPlayer;
 
     public Game(Music music) {
         this.music = music;
-        this.running = false;
+        players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        running = false;
     }
 
     public void run() {
@@ -116,15 +118,21 @@ public class Game {
                     }
 
                     players.forEach(player -> {
-                        function.accept(player);
+                        if (function != null) {
+                            function.accept(player);
+                        }
                         play(player, tick);
                     });
                 } finally {
                     lock.unlock();
                 }
 
-                while (System.currentTimeMillis() - startTime < 1000 / music.getTempo()) {
-                    // do nothing.
+                try {
+                    if ((long) (1000 / music.getTempo()) - (System.currentTimeMillis() - startTime) > 0) {
+                        Thread.sleep((long) (1000 / music.getTempo()) - (System.currentTimeMillis() - startTime));
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
                 tick++;
             }
@@ -140,7 +148,7 @@ public class Game {
                             sound = instruments.get(note.getInstrument());
                         }
                         float volume = layer.getVolume() * note.getVolume();
-                        player.playSound(player.getLocation(), sound, volume, note.getPitch());
+                        player.playSound(player.getLocation(), sound, note.getVolume(), note.getPitch());
                     });
         }
     }

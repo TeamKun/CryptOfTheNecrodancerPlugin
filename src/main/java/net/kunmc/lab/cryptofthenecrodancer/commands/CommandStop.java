@@ -22,6 +22,7 @@ public class CommandStop implements CommandBase {
 
         CryptOfTheNecroDancer.game.stop();
         CryptOfTheNecroDancer.game = null;
+        sender.sendMessage(ChatColor.GREEN + "ゲームを終了します！");
 
         return true;
     }

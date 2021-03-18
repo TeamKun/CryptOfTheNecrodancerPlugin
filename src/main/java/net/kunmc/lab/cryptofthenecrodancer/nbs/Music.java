@@ -1,13 +1,10 @@
 package net.kunmc.lab.cryptofthenecrodancer.nbs;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 
 public class Music {
     private final byte version;
-    private final byte instrument;
     private final short length;
     private final short layerCount;
     private final String title;
@@ -15,125 +12,12 @@ public class Music {
     private final String originalAuthor;
     private final String description;
     private final float tempo;
-    private final boolean autoSave;
-    private final byte autoSaveDuration;
     private final byte timeSignature;
-    private final int minutesSpent;
-    private final int leftClicks;
-    private final int rightClicks;
-    private final int noteBlockAdded;
-    private final int noteBlockRemoved;
-    private final String importedFileName;
     private final boolean enableLoop;
     private final byte maxLoopCount;
     private final short loopStartTick;
     private final HashMap<Integer, Layer>  layers = new HashMap<>();
     private final boolean isStereo;
-
-    public Music(InputStream inputStream) throws IOException {
-        DataInputStream stream = new DataInputStream(inputStream);
-        short length = 0;
-        boolean isStereo = false;
-
-        if (stream.readShort() == 0) {
-            version = stream.readByte();
-            instrument = stream.readByte();
-            if (version >= 3) {
-                length = stream.readShort();
-            }
-        } else {
-            version = 0;
-            instrument = 10;
-            length = 0;
-        }
-
-        layerCount = stream.readShort();
-        title = readString(stream);
-        author = readString(stream);
-        originalAuthor = readString(stream);
-        description = readString(stream);
-        tempo = stream.readShort() / 100.0f;
-        autoSave = stream.readBoolean();
-        autoSaveDuration = stream.readByte();
-        timeSignature = stream.readByte();
-        minutesSpent = stream.readInt();
-        leftClicks = stream.readInt();
-        rightClicks = stream.readInt();
-        noteBlockAdded = stream.readInt();
-        noteBlockRemoved = stream.readInt();
-        importedFileName = readString(stream);
-
-        if (version >= 4) {
-            enableLoop = stream.readBoolean();
-            maxLoopCount = stream.readByte();
-            loopStartTick = stream.readShort();
-        } else {
-            enableLoop = false;
-            maxLoopCount = 0;
-            loopStartTick = 0;
-        }
-
-        short tick = -1;
-        for (short jumpTicks; (jumpTicks = stream.readShort()) != 0; ) {
-            tick += jumpTicks;
-
-            short layer = -1;
-            for (short jumpLayers; (jumpLayers = stream.readShort()) != 0; ) {
-                layer += jumpLayers;
-
-                byte instrument = stream.readByte();
-                byte key = stream.readByte();
-                byte volume = 100;
-                int panning = 100;
-                short pitch = 0;
-                if (version >= 4) {
-                    volume = stream.readByte();
-                    panning = 200 - stream.readUnsignedByte();
-                    pitch = stream.readShort();
-                }
-
-                if (panning != 100) {
-                    isStereo = true;
-                }
-
-                setNote(layer, tick, new Note(instrument, key, volume, panning, pitch));
-            }
-        }
-
-        if (0 < version && version < 3) {
-            length = tick;
-        }
-
-        for (int i = 0; i < layerCount; i++) {
-            Layer layer = layers.get(i);
-            String name = readString(stream);
-
-            if (version >= 4) {
-                // Layer locked
-                stream.readBoolean();
-            }
-
-            byte volume = stream.readByte();
-            int panning = 100;
-            if (version >= 2) {
-                panning = stream.readByte();
-            }
-
-            if (panning != 100) {
-                isStereo = true;
-            }
-
-            if (layer != null) {
-                layer.setName(name);
-                layer.setVolume(volume);
-                layer.setPanning(panning);
-            }
-        }
-
-        this.length = length;
-        this.isStereo = isStereo;
-        // custom instrument
-    }
 
     public byte getVersion() {
         return version;
@@ -177,29 +61,173 @@ public class Music {
         return isStereo;
     }
 
-    private void setNote(int layerIndex, int tick, Note note) {
-        Layer layer = layers.get(layerIndex);
-        if (layer == null) {
-            layer = new Layer();
-            layers.put(layerIndex, layer);
-        }
+    public Music(InputStream inputStream) {
+        byte version = 0;
+        short length = 0;
+        short layerCount = 0;
+        String title = "";
+        String author = "";
+        String originalAuthor = "";
+        String description = "";
+        float tempo = 0.0f;
+        byte timeSignature = 0;
+        boolean enableLoop = false;
+        byte maxLoopCount = 0;
+        short loopStartTick = 0;
+        boolean isStereo = false;
 
-        layer.setNote(tick, note);
-    }
+        try {
+            DataInputStream dataInputStream = new DataInputStream(inputStream);
+            length = readShort(dataInputStream);
+            byte customInstrument = 10;
+            if (length == 0) {
+                version = dataInputStream.readByte();
+                customInstrument = dataInputStream.readByte(); // instruments
+                if (version >= 3) {
+                    length = readShort(dataInputStream);
+                }
+            }
+            layerCount = readShort(dataInputStream);
+            title = readString(dataInputStream);
+            author = readString(dataInputStream);
+            originalAuthor = readString(dataInputStream); // original author
+            description = readString(dataInputStream);
+            tempo = readShort(dataInputStream) / 100f;
+            dataInputStream.readBoolean(); // auto-save
+            dataInputStream.readByte(); // auto-save duration
+            timeSignature = dataInputStream.readByte(); // x/4ths, time signature
+            readInt(dataInputStream); // minutes spent on project
+            readInt(dataInputStream); // left clicks (why?)
+            readInt(dataInputStream); // right clicks (why?)
+            readInt(dataInputStream); // blocks added
+            readInt(dataInputStream); // blocks removed
+            readString(dataInputStream); // .mid/.schematic file name
+            if (version >= 4) {
+                enableLoop = dataInputStream.readByte() != 0; // loop on/off
+                maxLoopCount = dataInputStream.readByte(); // max loop count
+                loopStartTick = readShort(dataInputStream); // loop start tick
+            }
+            short tick = -1;
+            while (true) {
+                short jumpTicks = readShort(dataInputStream); // jumps till next tick
+                //System.out.println("Jumps to next tick: " + jumpTicks);
+                if (jumpTicks == 0) {
+                    break;
+                }
+                tick += jumpTicks;
+                //System.out.println("Tick: " + tick);
+                short layer = -1;
+                while (true) {
+                    short jumpLayers = readShort(dataInputStream); // jumps till next layer
+                    if (jumpLayers == 0) {
+                        break;
+                    }
+                    layer += jumpLayers;
+                    //System.out.println("Layer: " + layer);
+                    byte instrument = dataInputStream.readByte();
 
-    private String readString(DataInputStream stream) throws IOException {
-        int length = stream.readInt();
+                    if (instrument >= customInstrument) {
+                        instrument = 0;
+                    }
 
-        StringBuilder builder;
-        for(builder = new StringBuilder(length); length > 0; --length) {
-            char c = (char)stream.readByte();
-            if (c == '\r') {
-                c = ' ';
+                    byte key = dataInputStream.readByte();
+                    byte volume = 100;
+                    int panning = 100;
+                    short pitch = 0;
+                    if (version >= 4) {
+                        volume = dataInputStream.readByte(); // note block velocity
+                        panning = 200 - dataInputStream.readUnsignedByte(); // note panning, 0 is right in nbs format
+                        pitch = readShort(dataInputStream); // note block pitch
+                    }
+
+                    if (panning != 100){
+                        isStereo = true;
+                    }
+
+                    setNote(layer, tick, new Note(instrument, key, volume, panning, pitch), layers);
+                }
             }
 
-            builder.append(c);
+            if (version > 0 && version < 3) {
+                length = tick;
+            }
+
+            for (int i = 0; i < layerCount; i++) {
+                Layer layer = layers.get(i);
+
+                String name = readString(dataInputStream);
+                if (version >= 4){
+                    dataInputStream.readByte(); // layer lock
+                }
+
+                byte volume = dataInputStream.readByte();
+                int panning = 100;
+                if (version >= 2){
+                    panning = 200 - dataInputStream.readUnsignedByte(); // layer stereo, 0 is right in nbs format
+                }
+
+                if (panning != 100){
+                    isStereo = true;
+                }
+
+                if (layer != null) {
+                    layer.setName(name);
+                    layer.setVolume(volume);
+                    layer.setPanning(panning);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        this.version = version;
+        this.length = length;
+        this.layerCount = layerCount;
+        this.title = title;
+        this.author = author;
+        this.originalAuthor = originalAuthor;
+        this.description = description;
+        this.tempo = tempo;
+        this.timeSignature = timeSignature;
+        this.enableLoop = enableLoop;
+        this.maxLoopCount = maxLoopCount;
+        this.loopStartTick = loopStartTick;
+        this.isStereo = isStereo;
+    }
+
+    private void setNote(int layerIndex, int ticks, Note note, HashMap<Integer, Layer> layerHashMap) {
+        Layer layer = layerHashMap.get(layerIndex);
+        if (layer == null) {
+            layer = new Layer();
+            layerHashMap.put(layerIndex, layer);
+        }
+        layer.setNote(ticks, note);
+    }
+
+    private short readShort(DataInputStream dataInputStream) throws IOException {
+        int byte1 = dataInputStream.readUnsignedByte();
+        int byte2 = dataInputStream.readUnsignedByte();
+        return (short) (byte1 + (byte2 << 8));
+    }
+
+    private int readInt(DataInputStream dataInputStream) throws IOException {
+        int byte1 = dataInputStream.readUnsignedByte();
+        int byte2 = dataInputStream.readUnsignedByte();
+        int byte3 = dataInputStream.readUnsignedByte();
+        int byte4 = dataInputStream.readUnsignedByte();
+        return (byte1 + (byte2 << 8) + (byte3 << 16) + (byte4 << 24));
+    }
+
+    private String readString(DataInputStream dataInputStream) throws IOException {
+        int length = readInt(dataInputStream);
+        StringBuilder builder = new StringBuilder(length);
+        for (; length > 0; --length) {
+            char c = (char) dataInputStream.readByte();
+            if (c == (char) 0x0D) {
+                c = ' ';
+            }
+            builder.append(c);
+        }
         return builder.toString();
     }
 }

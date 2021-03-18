@@ -10,7 +10,7 @@ public class Events implements Listener
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {
-        if (CryptOfTheNecroDancer.game != null && CryptOfTheNecroDancer.game.isRunning()) {
+        if (CryptOfTheNecroDancer.game != null) {
             CryptOfTheNecroDancer.game.addPlayer(event.getPlayer());
         }
     }
@@ -18,7 +18,7 @@ public class Events implements Listener
     @EventHandler
     public void onQuit(PlayerQuitEvent event)
     {
-        if (CryptOfTheNecroDancer.game != null && CryptOfTheNecroDancer.game.isRunning()) {
+        if (CryptOfTheNecroDancer.game != null) {
             CryptOfTheNecroDancer.game.removePlayer(event.getPlayer());
         }
     }
