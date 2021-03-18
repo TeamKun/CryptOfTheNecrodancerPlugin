@@ -29,6 +29,7 @@ public class CommandMain implements CommandExecutor, TabCompleter
     {
         if (!sender.hasPermission("crypt.command"))
         {
+            sender.sendMessage(ChatColor.RED + "権限が有りません。");
             return true;
         }
 

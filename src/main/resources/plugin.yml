@@ -1,6 +1,6 @@
 name: CryptOfNecroDancerPlugin
 version: ${project.version}
-prefix: CONP
+prefix: CryptOfTheNecroDancer
 main: net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer
 api-version: 1.15
 authors: [Peyang, YukiAt]

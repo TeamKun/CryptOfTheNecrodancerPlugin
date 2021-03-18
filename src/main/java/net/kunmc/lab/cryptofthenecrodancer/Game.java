@@ -36,9 +36,7 @@ public class Game
     public void run()
     {
         if (running)
-        {
             return;
-        }
 
         Plugin plugin = CryptOfTheNecroDancer.plugin;
         musicPlayer = new MusicPlayer();
@@ -50,9 +48,7 @@ public class Game
     public void stop()
     {
         if (!running)
-        {
             return;
-        }
 
         musicPlayer = null;
         running = false;
@@ -68,11 +64,8 @@ public class Game
         lock.lock();
         try
         {
-            if (players.contains(player))
-            {
-                return;
-            }
-            players.add(player);
+            if (!players.contains(player))
+                players.add(player);
         }
         finally
         {
@@ -85,11 +78,8 @@ public class Game
         lock.lock();
         try
         {
-            if (!players.contains(player))
-            {
-                return;
-            }
-            players.remove(player);
+            if (players.contains(player))
+                players.remove(player);
         }
         finally
         {
@@ -103,21 +93,13 @@ public class Game
         long time2 = Math.abs(System.currentTimeMillis() - judgeTime2);
 
         if (time1 < Judge.PERFECT.getJudgeTime() || time2 < Judge.PERFECT.getJudgeTime())
-        {
             return Judge.PERFECT;
-        }
         else if (time1 < Judge.GREAT.getJudgeTime() || time2 < Judge.GREAT.getJudgeTime())
-        {
             return Judge.GREAT;
-        }
         else if (time1 < Judge.GOOD.getJudgeTime() || time2 < Judge.GOOD.getJudgeTime())
-        {
             return Judge.GOOD;
-        }
         else
-        {
             return Judge.MISS;
-        }
     }
 
     private class MusicPlayer implements Runnable
@@ -175,9 +157,7 @@ public class Game
                 try
                 {
                     if ((1000 / music.getTempo()) > (System.currentTimeMillis() - startTime))
-                    {
                         Thread.sleep((long) (1000 / music.getTempo()) - (System.currentTimeMillis() - startTime));
-                    }
                 }
                 catch (InterruptedException e)
                 {
@@ -203,9 +183,8 @@ public class Game
                         Note note = layer.getNote(tick);
                         Sound sound = instruments.get(0);
                         if (note.getInstrument() < instruments.size())
-                        {
                             sound = instruments.get(note.getInstrument());
-                        }
+
                         float volume = layer.getVolume() * note.getVolume();
                         player.playSound(player.getLocation(), sound, volume, note.getTransposedPitch());
                     });
