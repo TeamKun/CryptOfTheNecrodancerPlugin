@@ -42,7 +42,7 @@ public class Events implements Listener
         long last = lastMoveTime.containsKey(event.getPlayer()) ? lastMoveTime.get(event.getPlayer()) : 0;
         long current = System.currentTimeMillis();
 
-        if (current - last < 100) {
+        if (current - last < 200) {
             event.setCancelled(true);
             return;
         }

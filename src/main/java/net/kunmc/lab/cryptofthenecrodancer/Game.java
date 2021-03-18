@@ -20,13 +20,15 @@ public class Game {
     private final Lock lock = new ReentrantLock();
     private boolean running;
     private MusicPlayer musicPlayer;
-    private long judgeTime;
+    private long judgeTime1;
+    private long judgeTime2;
 
     public Game(Music music) {
         this.music = music;
         players = new ArrayList<>(Bukkit.getOnlinePlayers());
         running = false;
-        judgeTime = -1;
+        judgeTime1 = -1;
+        judgeTime2 = -1;
     }
 
     public void run() {
@@ -79,15 +81,16 @@ public class Game {
     }
 
     public Judge judge() {
-        long time = System.currentTimeMillis() - judgeTime;
+        long time1 = Math.abs(System.currentTimeMillis() - judgeTime1);
+        long time2 = Math.abs(System.currentTimeMillis() - judgeTime2);
 
-        if (time < Judge.PERFECT.getJudgeTime()) {
+        if (time1 < Judge.PERFECT.getJudgeTime() || time2 < Judge.PERFECT.getJudgeTime()) {
             return Judge.PERFECT;
         }
-        else if (time < Judge.GREAT.getJudgeTime()) {
+        else if (time1 < Judge.GREAT.getJudgeTime() || time2 < Judge.GREAT.getJudgeTime()) {
             return Judge.GREAT;
         }
-        else if (time < Judge.GOOD.getJudgeTime()) {
+        else if (time1 < Judge.GOOD.getJudgeTime() || time2 < Judge.GOOD.getJudgeTime()) {
             return Judge.GOOD;
         }
         else {
@@ -154,7 +157,8 @@ public class Game {
             if (tick % (music.getTimeSignature() * 2) == 0) {
                 // メトロノーム
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f);
-                judgeTime = System.currentTimeMillis();
+                judgeTime1 = System.currentTimeMillis();
+                judgeTime2 = judgeTime1 + (long) (1000 / music.getTempo() * music.getTimeSignature() * 2);
             }
 
             music.getLayers().values().stream()
