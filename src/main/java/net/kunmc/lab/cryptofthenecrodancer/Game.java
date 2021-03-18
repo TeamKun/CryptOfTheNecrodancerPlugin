@@ -1,5 +1,6 @@
 package net.kunmc.lab.cryptofthenecrodancer;
 
+import net.kunmc.lab.cryptofthenecrodancer.enums.Judge;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Note;
 import org.bukkit.Bukkit;
@@ -12,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Consumer;
 
 public class Game {
     private final Music music;
@@ -20,11 +20,13 @@ public class Game {
     private final Lock lock = new ReentrantLock();
     private boolean running;
     private MusicPlayer musicPlayer;
+    private long judgeTime;
 
     public Game(Music music) {
         this.music = music;
         players = new ArrayList<>(Bukkit.getOnlinePlayers());
         running = false;
+        judgeTime = -1;
     }
 
     public void run() {
@@ -76,6 +78,23 @@ public class Game {
         }
     }
 
+    public Judge judge() {
+        long time = System.currentTimeMillis() - judgeTime;
+
+        if (time < Judge.PERFECT.getJudgeTime()) {
+            return Judge.PERFECT;
+        }
+        else if (time < Judge.GREAT.getJudgeTime()) {
+            return Judge.GREAT;
+        }
+        else if (time < Judge.GOOD.getJudgeTime()) {
+            return Judge.GOOD;
+        }
+        else {
+            return Judge.MISS;
+        }
+    }
+
     private class MusicPlayer implements Runnable {
         private final List<Sound> instruments = Arrays.asList(
                 Sound.BLOCK_NOTE_BLOCK_HARP,
@@ -114,7 +133,6 @@ public class Game {
                     }
 
                     players.forEach(player -> {
-                        judge(player, tick);
                         play(player, tick);
                     });
                 } finally {
@@ -133,6 +151,12 @@ public class Game {
         }
 
         private void play(Player player, int tick) {
+            if (tick % (music.getTimeSignature() * 2) == 0) {
+                // メトロノーム
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f);
+                judgeTime = System.currentTimeMillis();
+            }
+
             music.getLayers().values().stream()
                     .filter(layer -> layer.getNote(tick) != null)
                     .forEach(layer -> {
@@ -144,12 +168,6 @@ public class Game {
                         float volume = layer.getVolume() * note.getVolume();
                         player.playSound(player.getLocation(), sound, volume, note.getTransposedPitch());
                     });
-        }
-
-        private void judge(Player player, int tick) {
-            if (tick % (music.getTimeSignature() * 2) == 0) {
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f);
-            }
         }
     }
 }

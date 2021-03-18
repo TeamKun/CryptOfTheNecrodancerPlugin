@@ -63,10 +63,6 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -75,11 +71,6 @@
             <artifactId>paper-api</artifactId>
             <version>1.15.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.TeamKun</groupId>
-            <artifactId>NoteBlockAPI</artifactId>
-            <version>v1.7</version>
         </dependency>
     </dependencies>
 </project>

@@ -18,15 +18,6 @@ public class CryptOfTheNecroDancer extends JavaPlugin
         plugin = this;
         logger = getLogger();
 
-        if (!Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")) //NoteBlockAPiがあるかどうかちぇっく
-        {
-            logger.severe("NoteBlockAPIが見つかりませんでした。\n" +
-                    "/kpm i NoteBlockAPI を実行するか、\n" +
-                    "https://www.spigotmc.org/resources/noteblockapi.19287/ からダウンロードしてください。");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-
         CommandMain command = new CommandMain();
         getServer().getPluginCommand("crypt").setExecutor(command);
         getServer().getPluginCommand("crypt").setTabCompleter(command);

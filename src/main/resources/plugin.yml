@@ -5,7 +5,6 @@ main: net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer
 api-version: 1.15
 authors: [Peyang, YukiAt]
 description: Rythm Dance!
-depend: [NoteBlockAPI]
 website: https://kunmc.net/
 
 commands:
