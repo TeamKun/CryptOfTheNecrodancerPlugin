@@ -24,7 +24,7 @@ public class CryptOfTheNecroDancer extends JavaPlugin
 
         Bukkit.getPluginManager().registerEvents(new Events(), this);
 
-        logger.info("CryptOfNecrodancerは正常にアクティベートされました！");
+        logger.info("Crypt of the NecroDancer Plugin は正常にアクティベートされました！");
     }
 
     @Override
