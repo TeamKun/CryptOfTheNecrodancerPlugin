@@ -6,25 +6,34 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class CommandMain implements CommandExecutor, TabCompleter {
+public class CommandMain implements CommandExecutor, TabCompleter
+{
 
     private final List<CommandBase> commands = new ArrayList<>();
 
-    public CommandMain() {
+    public CommandMain()
+    {
         commands.add(new CommandStart());
         commands.add(new CommandStop());
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("crypt.command")) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    {
+        if (!sender.hasPermission("crypt.command"))
+        {
             return true;
         }
 
-        if (args.length == 0) {
+        if (args.length == 0)
+        {
             sender.sendMessage(ChatColor.RED + "コマンドの引数が足りないようです。");
             return true;
         }
@@ -34,7 +43,8 @@ public class CommandMain implements CommandExecutor, TabCompleter {
                 .filter(c -> c.getName().equalsIgnoreCase(args[0]))
                 .findAny();
 
-        if (!selectCommand.isPresent()) {
+        if (!selectCommand.isPresent())
+        {
             sender.sendMessage(ChatColor.RED + "そのようなコマンドは存在しません。");
             return true;
         }
@@ -43,14 +53,17 @@ public class CommandMain implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+    {
         List<String> result;
 
-        if (!sender.hasPermission("crypt.command")) {
+        if (!sender.hasPermission("crypt.command"))
+        {
             return Collections.emptyList();
         }
 
-        switch (args.length) {
+        switch (args.length)
+        {
             case 0:
                 return Collections.emptyList();
             case 1:
@@ -58,19 +71,20 @@ public class CommandMain implements CommandExecutor, TabCompleter {
                 commands.forEach(c -> result.add(c.getName()));
                 break;
             default:
+            {
+                Optional<CommandBase> selectCommand = commands.stream()
+                        .parallel()
+                        .filter(c -> c.getName().equalsIgnoreCase(args[0]))
+                        .findAny();
+
+                if (!selectCommand.isPresent())
                 {
-                    Optional<CommandBase> selectCommand = commands.stream()
-                            .parallel()
-                            .filter(c -> c.getName().equalsIgnoreCase(args[0]))
-                            .findAny();
-
-                    if (!selectCommand.isPresent()) {
-                        return Collections.emptyList();
-                    }
-
-                    result = selectCommand.get().onTabComplete(Arrays.copyOfRange(args, 1, args.length));
+                    return Collections.emptyList();
                 }
-                break;
+
+                result = selectCommand.get().onTabComplete(Arrays.copyOfRange(args, 1, args.length));
+            }
+            break;
         }
 
         return result.stream()

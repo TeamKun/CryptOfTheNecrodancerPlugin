@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Game {
+public class Game
+{
     private final Music music;
     private final List<Player> players;
     private final Lock lock = new ReentrantLock();
@@ -23,7 +24,8 @@ public class Game {
     private long judgeTime1;
     private long judgeTime2;
 
-    public Game(Music music) {
+    public Game(Music music)
+    {
         this.music = music;
         players = new ArrayList<>(Bukkit.getOnlinePlayers());
         running = false;
@@ -31,8 +33,10 @@ public class Game {
         judgeTime2 = -1;
     }
 
-    public void run() {
-        if (running) {
+    public void run()
+    {
+        if (running)
+        {
             return;
         }
 
@@ -43,8 +47,10 @@ public class Game {
         running = true;
     }
 
-    public void stop() {
-        if (!running) {
+    public void stop()
+    {
+        if (!running)
+        {
             return;
         }
 
@@ -52,53 +58,70 @@ public class Game {
         running = false;
     }
 
-    public boolean isRunning() {
+    public boolean isRunning()
+    {
         return running;
     }
 
-    public void addPlayer(Player player) {
+    public void addPlayer(Player player)
+    {
         lock.lock();
-        try {
-            if (players.contains(player)) {
+        try
+        {
+            if (players.contains(player))
+            {
                 return;
             }
             players.add(player);
-        } finally {
+        }
+        finally
+        {
             lock.unlock();
         }
     }
 
-    public void removePlayer(Player player) {
+    public void removePlayer(Player player)
+    {
         lock.lock();
-        try {
-            if (!players.contains(player)) {
+        try
+        {
+            if (!players.contains(player))
+            {
                 return;
             }
             players.remove(player);
-        } finally {
+        }
+        finally
+        {
             lock.unlock();
         }
     }
 
-    public Judge judge() {
+    public Judge judge()
+    {
         long time1 = Math.abs(System.currentTimeMillis() - judgeTime1);
         long time2 = Math.abs(System.currentTimeMillis() - judgeTime2);
 
-        if (time1 < Judge.PERFECT.getJudgeTime() || time2 < Judge.PERFECT.getJudgeTime()) {
+        if (time1 < Judge.PERFECT.getJudgeTime() || time2 < Judge.PERFECT.getJudgeTime())
+        {
             return Judge.PERFECT;
         }
-        else if (time1 < Judge.GREAT.getJudgeTime() || time2 < Judge.GREAT.getJudgeTime()) {
+        else if (time1 < Judge.GREAT.getJudgeTime() || time2 < Judge.GREAT.getJudgeTime())
+        {
             return Judge.GREAT;
         }
-        else if (time1 < Judge.GOOD.getJudgeTime() || time2 < Judge.GOOD.getJudgeTime()) {
+        else if (time1 < Judge.GOOD.getJudgeTime() || time2 < Judge.GOOD.getJudgeTime())
+        {
             return Judge.GOOD;
         }
-        else {
+        else
+        {
             return Judge.MISS;
         }
     }
 
-    private class MusicPlayer implements Runnable {
+    private class MusicPlayer implements Runnable
+    {
         private final List<Sound> instruments = Arrays.asList(
                 Sound.BLOCK_NOTE_BLOCK_HARP,
                 Sound.BLOCK_NOTE_BLOCK_BASS,
@@ -119,18 +142,23 @@ public class Game {
         );
         private int tick;
 
-        public MusicPlayer() {
+        public MusicPlayer()
+        {
 
         }
 
         @Override
-        public void run() {
-            while (isRunning()) {
+        public void run()
+        {
+            while (isRunning())
+            {
                 long startTime = System.currentTimeMillis();
 
                 lock.lock();
-                try {
-                    if (tick > music.getLength()) {
+                try
+                {
+                    if (tick > music.getLength())
+                    {
                         running = false;
                         return;
                     }
@@ -138,23 +166,31 @@ public class Game {
                     players.forEach(player -> {
                         play(player, tick);
                     });
-                } finally {
+                }
+                finally
+                {
                     lock.unlock();
                 }
 
-                try {
-                    if ((1000 / music.getTempo()) > (System.currentTimeMillis() - startTime)) {
+                try
+                {
+                    if ((1000 / music.getTempo()) > (System.currentTimeMillis() - startTime))
+                    {
                         Thread.sleep((long) (1000 / music.getTempo()) - (System.currentTimeMillis() - startTime));
                     }
-                } catch (InterruptedException e) {
+                }
+                catch (InterruptedException e)
+                {
                     e.printStackTrace();
                 }
                 tick++;
             }
         }
 
-        private void play(Player player, int tick) {
-            if (tick % (music.getTimeSignature() * 2) == 0) {
+        private void play(Player player, int tick)
+        {
+            if (tick % (music.getTimeSignature() * 2) == 0)
+            {
                 // メトロノーム
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f);
                 judgeTime1 = System.currentTimeMillis();
@@ -166,7 +202,8 @@ public class Game {
                     .forEach(layer -> {
                         Note note = layer.getNote(tick);
                         Sound sound = instruments.get(0);
-                        if (note.getInstrument() < instruments.size()) {
+                        if (note.getInstrument() < instruments.size())
+                        {
                             sound = instruments.get(note.getInstrument());
                         }
                         float volume = layer.getVolume() * note.getVolume();

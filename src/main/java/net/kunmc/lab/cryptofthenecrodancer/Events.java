@@ -16,7 +16,8 @@ public class Events implements Listener
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {
-        if (CryptOfTheNecroDancer.game != null) {
+        if (CryptOfTheNecroDancer.game != null)
+        {
             CryptOfTheNecroDancer.game.addPlayer(event.getPlayer());
         }
     }
@@ -24,36 +25,43 @@ public class Events implements Listener
     @EventHandler
     public void onQuit(PlayerQuitEvent event)
     {
-        if (CryptOfTheNecroDancer.game != null) {
+        if (CryptOfTheNecroDancer.game != null)
+        {
             CryptOfTheNecroDancer.game.removePlayer(event.getPlayer());
         }
     }
 
     @EventHandler
-    public void onMove(PlayerMoveEvent event) {
-        if (CryptOfTheNecroDancer.game == null || !CryptOfTheNecroDancer.game.isRunning()) {
+    public void onMove(PlayerMoveEvent event)
+    {
+        if (CryptOfTheNecroDancer.game == null || !CryptOfTheNecroDancer.game.isRunning())
+        {
             return;
         }
 
-        if (!event.getPlayer().isOnGround()) {
+        if (!event.getPlayer().isOnGround())
+        {
             return;
         }
 
         if (Math.abs(event.getTo().getX() - event.getFrom().getX()) < Double.MIN_VALUE * 20.0 &&
                 Math.abs(event.getTo().getY() - event.getFrom().getY()) < Double.MIN_VALUE * 20.0 &&
-                Math.abs(event.getTo().getZ() - event.getFrom().getZ()) < Double.MIN_VALUE * 20.0) {
+                Math.abs(event.getTo().getZ() - event.getFrom().getZ()) < Double.MIN_VALUE * 20.0)
+        {
             return;
         }
 
-        long last = lastMoveTime.containsKey(event.getPlayer()) ? lastMoveTime.get(event.getPlayer()) : 0;
+        long last = lastMoveTime.containsKey(event.getPlayer()) ? lastMoveTime.get(event.getPlayer()): 0;
         long current = System.currentTimeMillis();
 
-        if (current - last < 200) {
+        if (current - last < 200)
+        {
             event.setCancelled(true);
             return;
         }
 
-        switch (CryptOfTheNecroDancer.game.judge()) {
+        switch (CryptOfTheNecroDancer.game.judge())
+        {
             case PERFECT:
                 event.getPlayer().sendMessage("PERFECT");
                 break;

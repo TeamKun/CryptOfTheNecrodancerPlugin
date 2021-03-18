@@ -9,9 +9,11 @@ import java.net.URL;
 
 public class URLUtils
 {
-    public static Music asMusic(URL url) {
+    public static Music asMusic(URL url)
+    {
         HttpURLConnection connection = null;
-        try {
+        try
+        {
             connection = (HttpURLConnection) url.openConnection();
 
             connection.setDoOutput(true);
@@ -20,13 +22,19 @@ public class URLUtils
             connection.setRequestProperty("User-Agent", "Mozilla/8.10; Safari/Chrome/Opera/Edge/KungleBot-Peyang; Mobile-Desktop");
             connection.connect();
 
-            try (InputStream stream = connection.getInputStream()) {
+            try (InputStream stream = connection.getInputStream())
+            {
                 return new Music(stream);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             return null;
-        } finally {
-            if (connection != null) {
+        }
+        finally
+        {
+            if (connection != null)
+            {
                 connection.disconnect();
             }
         }

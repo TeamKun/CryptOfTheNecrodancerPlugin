@@ -12,34 +12,43 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandStart implements CommandBase {
+public class CommandStart implements CommandBase
+{
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "start";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, String[] args) {
-        if (CryptOfTheNecroDancer.game != null && CryptOfTheNecroDancer.game.isRunning()) {
+    public boolean onCommand(CommandSender sender, String[] args)
+    {
+        if (CryptOfTheNecroDancer.game != null && CryptOfTheNecroDancer.game.isRunning())
+        {
             sender.sendMessage(ChatColor.RED + "既に開始されています。");
             return true;
         }
 
-        if (args.length != 1) {
+        if (args.length != 1)
+        {
             sender.sendMessage(ChatColor.RED + "引数の形式が間違っています。");
             return true;
         }
 
         Music music;
-        try {
+        try
+        {
             music = URLUtils.asMusic(new URL(args[0]));
-        } catch (MalformedURLException e) {
+        }
+        catch (MalformedURLException e)
+        {
             sender.sendMessage(ChatColor.RED + "引数の形式が間違っています。");
             return true;
         }
 
-        if (music == null) {
+        if (music == null)
+        {
             sender.sendMessage(ChatColor.RED + "曲が読み込めません！");
         }
 
@@ -51,8 +60,10 @@ public class CommandStart implements CommandBase {
     }
 
     @Override
-    public List<String> onTabComplete(String[] args) {
-        switch (args.length) {
+    public List<String> onTabComplete(String[] args)
+    {
+        switch (args.length)
+        {
             case 1:
                 return Collections.singletonList("<url>");
             default:

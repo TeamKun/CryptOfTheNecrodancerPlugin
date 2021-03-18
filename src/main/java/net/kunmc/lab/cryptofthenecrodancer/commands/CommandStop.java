@@ -7,15 +7,19 @@ import org.bukkit.command.CommandSender;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandStop implements CommandBase {
+public class CommandStop implements CommandBase
+{
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "stop";
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, String[] args) {
-        if (CryptOfTheNecroDancer.game == null || !CryptOfTheNecroDancer.game.isRunning()) {
+    public boolean onCommand(CommandSender sender, String[] args)
+    {
+        if (CryptOfTheNecroDancer.game == null || !CryptOfTheNecroDancer.game.isRunning())
+        {
             sender.sendMessage(ChatColor.RED + "ゲームが開始されていないようです。");
             return true;
         }
@@ -28,7 +32,8 @@ public class CommandStop implements CommandBase {
     }
 
     @Override
-    public List<String> onTabComplete(String[] args) {
+    public List<String> onTabComplete(String[] args)
+    {
         return Collections.emptyList();
     }
 }

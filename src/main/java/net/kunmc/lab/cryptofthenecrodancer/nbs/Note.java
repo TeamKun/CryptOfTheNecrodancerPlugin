@@ -1,12 +1,15 @@
 package net.kunmc.lab.cryptofthenecrodancer.nbs;
 
-public class Note {
-    private static float[] pitches;
+public class Note
+{
+    private static final float[] pitches;
 
-    static {
+    static
+    {
         pitches = new float[2401];
 
-        for (int i = 0; i < pitches.length; i++) {
+        for (int i = 0; i < pitches.length; i++)
+        {
             pitches[i] = (float) Math.pow(2, (i - 1200d) / 1200d);
         }
     }
@@ -17,11 +20,13 @@ public class Note {
     private int panning;
     private short pitch;
 
-    public Note(byte instrument, byte key) {
-        this(instrument, key, (byte)100, 100, (short)0);
+    public Note(byte instrument, byte key)
+    {
+        this(instrument, key, (byte) 100, 100, (short) 0);
     }
 
-    public Note(byte instrument, byte key, byte volume, int panning, short pitch) {
+    public Note(byte instrument, byte key, byte volume, int panning, short pitch)
+    {
         this.instrument = instrument;
         this.key = key;
         this.volume = volume;
@@ -29,31 +34,38 @@ public class Note {
         this.pitch = pitch;
     }
 
-    public byte getInstrument() {
+    public byte getInstrument()
+    {
         return this.instrument;
     }
 
-    public void setInstrument(byte instrument) {
+    public void setInstrument(byte instrument)
+    {
         this.instrument = instrument;
     }
 
-    public byte getKey() {
+    public byte getKey()
+    {
         return this.key;
     }
 
-    public void setKey(byte key) {
+    public void setKey(byte key)
+    {
         this.key = key;
     }
 
-    public short getPitch() {
+    public short getPitch()
+    {
         return this.pitch;
     }
 
-    public void setPitch(short pitch) {
+    public void setPitch(short pitch)
+    {
         this.pitch = pitch;
     }
 
-    public float getTransposedPitch() {
+    public float getTransposedPitch()
+    {
         short pitch = (short) (this.pitch + key * 100);
 
         while (pitch < 3300) pitch += 1200;
@@ -64,27 +76,33 @@ public class Note {
         return pitches[pitch];
     }
 
-    public byte getVolume() {
+    public byte getVolume()
+    {
         return this.volume;
     }
 
-    public void setVolume(byte volume) {
-        if (volume < 0) {
+    public void setVolume(byte volume)
+    {
+        if (volume < 0)
+        {
             volume = 0;
         }
 
-        if (volume > 100) {
+        if (volume > 100)
+        {
             volume = 100;
         }
 
         this.volume = volume;
     }
 
-    public int getPanning() {
+    public int getPanning()
+    {
         return this.panning;
     }
 
-    public void setPanning(int panning) {
+    public void setPanning(int panning)
+    {
         this.panning = panning;
     }
 }

@@ -2,52 +2,64 @@ package net.kunmc.lab.cryptofthenecrodancer.nbs;
 
 import java.util.HashMap;
 
-public class Layer {
+public class Layer
+{
     private HashMap<Integer, Note> notesAtTicks = new HashMap();
     private byte volume = 100;
     private int panning = 100;
     private String name = "";
 
-    public Layer() {
+    public Layer()
+    {
     }
 
-    public HashMap<Integer, Note> getNotesAtTicks() {
+    public HashMap<Integer, Note> getNotesAtTicks()
+    {
         return this.notesAtTicks;
     }
 
-    public void setNotesAtTicks(HashMap<Integer, Note> notesAtTicks) {
+    public void setNotesAtTicks(HashMap<Integer, Note> notesAtTicks)
+    {
         this.notesAtTicks = notesAtTicks;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return this.name;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 
-    public Note getNote(int tick) {
-        return (Note)this.notesAtTicks.get(tick);
+    public Note getNote(int tick)
+    {
+        return this.notesAtTicks.get(tick);
     }
 
-    public void setNote(int tick, Note note) {
+    public void setNote(int tick, Note note)
+    {
         this.notesAtTicks.put(tick, note);
     }
 
-    public byte getVolume() {
+    public byte getVolume()
+    {
         return this.volume;
     }
 
-    public void setVolume(byte volume) {
+    public void setVolume(byte volume)
+    {
         this.volume = volume;
     }
 
-    public int getPanning() {
+    public int getPanning()
+    {
         return this.panning;
     }
 
-    public void setPanning(int panning) {
+    public void setPanning(int panning)
+    {
         this.panning = panning;
     }
 }

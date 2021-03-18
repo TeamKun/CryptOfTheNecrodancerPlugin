@@ -1,9 +1,12 @@
 package net.kunmc.lab.cryptofthenecrodancer.nbs;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
-public class Music {
+public class Music
+{
     private final byte version;
     private final short length;
     private final short layerCount;
@@ -16,52 +19,11 @@ public class Music {
     private final boolean enableLoop;
     private final byte maxLoopCount;
     private final short loopStartTick;
-    private final HashMap<Integer, Layer>  layers = new HashMap<>();
+    private final HashMap<Integer, Layer> layers = new HashMap<>();
     private final boolean isStereo;
 
-    public byte getVersion() {
-        return version;
-    }
-
-    public short getLength() {
-        return length;
-    }
-
-    public short getLayerCount() {
-        return layerCount;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getOriginalAuthor() {
-        return originalAuthor;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public float getTempo() {
-        return tempo;
-    }
-
-    public byte getTimeSignature() {
-        return timeSignature;
-    }
-
-    public HashMap<Integer, Layer> getLayers() { return layers; }
-
-    public boolean isStereo() {
-        return isStereo;
-    }
-
-    public Music(InputStream inputStream) {
+    public Music(InputStream inputStream)
+    {
         byte version = 0;
         short length = 0;
         short layerCount = 0;
@@ -76,14 +38,17 @@ public class Music {
         short loopStartTick = 0;
         boolean isStereo = false;
 
-        try {
+        try
+        {
             DataInputStream dataInputStream = new DataInputStream(inputStream);
             length = readShort(dataInputStream);
             byte customInstrument = 10;
-            if (length == 0) {
+            if (length == 0)
+            {
                 version = dataInputStream.readByte();
                 customInstrument = dataInputStream.readByte(); // instruments
-                if (version >= 3) {
+                if (version >= 3)
+                {
                     length = readShort(dataInputStream);
                 }
             }
@@ -102,31 +67,37 @@ public class Music {
             readInt(dataInputStream); // blocks added
             readInt(dataInputStream); // blocks removed
             readString(dataInputStream); // .mid/.schematic file name
-            if (version >= 4) {
+            if (version >= 4)
+            {
                 enableLoop = dataInputStream.readByte() != 0; // loop on/off
                 maxLoopCount = dataInputStream.readByte(); // max loop count
                 loopStartTick = readShort(dataInputStream); // loop start tick
             }
             short tick = -1;
-            while (true) {
+            while (true)
+            {
                 short jumpTicks = readShort(dataInputStream); // jumps till next tick
                 //System.out.println("Jumps to next tick: " + jumpTicks);
-                if (jumpTicks == 0) {
+                if (jumpTicks == 0)
+                {
                     break;
                 }
                 tick += jumpTicks;
                 //System.out.println("Tick: " + tick);
                 short layer = -1;
-                while (true) {
+                while (true)
+                {
                     short jumpLayers = readShort(dataInputStream); // jumps till next layer
-                    if (jumpLayers == 0) {
+                    if (jumpLayers == 0)
+                    {
                         break;
                     }
                     layer += jumpLayers;
                     //System.out.println("Layer: " + layer);
                     byte instrument = dataInputStream.readByte();
 
-                    if (instrument >= customInstrument) {
+                    if (instrument >= customInstrument)
+                    {
                         instrument = 0;
                     }
 
@@ -134,13 +105,15 @@ public class Music {
                     byte volume = 100;
                     int panning = 100;
                     short pitch = 0;
-                    if (version >= 4) {
+                    if (version >= 4)
+                    {
                         volume = dataInputStream.readByte(); // note block velocity
                         panning = 200 - dataInputStream.readUnsignedByte(); // note panning, 0 is right in nbs format
                         pitch = readShort(dataInputStream); // note block pitch
                     }
 
-                    if (panning != 100){
+                    if (panning != 100)
+                    {
                         isStereo = true;
                     }
 
@@ -148,35 +121,43 @@ public class Music {
                 }
             }
 
-            if (version > 0 && version < 3) {
+            if (version > 0 && version < 3)
+            {
                 length = tick;
             }
 
-            for (int i = 0; i < layerCount; i++) {
+            for (int i = 0; i < layerCount; i++)
+            {
                 Layer layer = layers.get(i);
 
                 String name = readString(dataInputStream);
-                if (version >= 4){
+                if (version >= 4)
+                {
                     dataInputStream.readByte(); // layer lock
                 }
 
                 byte volume = dataInputStream.readByte();
                 int panning = 100;
-                if (version >= 2){
+                if (version >= 2)
+                {
                     panning = 200 - dataInputStream.readUnsignedByte(); // layer stereo, 0 is right in nbs format
                 }
 
-                if (panning != 100){
+                if (panning != 100)
+                {
                     isStereo = true;
                 }
 
-                if (layer != null) {
+                if (layer != null)
+                {
                     layer.setName(name);
                     layer.setVolume(volume);
                     layer.setPanning(panning);
                 }
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
 
@@ -195,22 +176,81 @@ public class Music {
         this.isStereo = isStereo;
     }
 
-    private void setNote(int layerIndex, int ticks, Note note, HashMap<Integer, Layer> layerHashMap) {
+    public byte getVersion()
+    {
+        return version;
+    }
+
+    public short getLength()
+    {
+        return length;
+    }
+
+    public short getLayerCount()
+    {
+        return layerCount;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public String getAuthor()
+    {
+        return author;
+    }
+
+    public String getOriginalAuthor()
+    {
+        return originalAuthor;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public float getTempo()
+    {
+        return tempo;
+    }
+
+    public byte getTimeSignature()
+    {
+        return timeSignature;
+    }
+
+    public HashMap<Integer, Layer> getLayers()
+    {
+        return layers;
+    }
+
+    public boolean isStereo()
+    {
+        return isStereo;
+    }
+
+    private void setNote(int layerIndex, int ticks, Note note, HashMap<Integer, Layer> layerHashMap)
+    {
         Layer layer = layerHashMap.get(layerIndex);
-        if (layer == null) {
+        if (layer == null)
+        {
             layer = new Layer();
             layerHashMap.put(layerIndex, layer);
         }
         layer.setNote(ticks, note);
     }
 
-    private short readShort(DataInputStream dataInputStream) throws IOException {
+    private short readShort(DataInputStream dataInputStream) throws IOException
+    {
         int byte1 = dataInputStream.readUnsignedByte();
         int byte2 = dataInputStream.readUnsignedByte();
         return (short) (byte1 + (byte2 << 8));
     }
 
-    private int readInt(DataInputStream dataInputStream) throws IOException {
+    private int readInt(DataInputStream dataInputStream) throws IOException
+    {
         int byte1 = dataInputStream.readUnsignedByte();
         int byte2 = dataInputStream.readUnsignedByte();
         int byte3 = dataInputStream.readUnsignedByte();
@@ -218,12 +258,15 @@ public class Music {
         return (byte1 + (byte2 << 8) + (byte3 << 16) + (byte4 << 24));
     }
 
-    private String readString(DataInputStream dataInputStream) throws IOException {
+    private String readString(DataInputStream dataInputStream) throws IOException
+    {
         int length = readInt(dataInputStream);
         StringBuilder builder = new StringBuilder(length);
-        for (; length > 0; --length) {
+        for (; length > 0; --length)
+        {
             char c = (char) dataInputStream.readByte();
-            if (c == (char) 0x0D) {
+            if (c == (char) 0x0D)
+            {
                 c = ' ';
             }
             builder.append(c);

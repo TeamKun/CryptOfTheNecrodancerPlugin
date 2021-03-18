@@ -14,11 +14,13 @@ public enum Judge
      */
     private final int judgeTime;
 
-    Judge(int judgeTime) {
+    Judge(int judgeTime)
+    {
         this.judgeTime = judgeTime;
     }
 
-    public int getJudgeTime() {
+    public int getJudgeTime()
+    {
         return judgeTime;
     }
 }
