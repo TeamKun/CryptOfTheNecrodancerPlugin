@@ -1,8 +1,6 @@
 package net.kunmc.lab.cryptofthenecrodancer.judger;
 
 import net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
 
 /**
@@ -12,6 +10,10 @@ public class Judger
 {
     public static JudgeResult onPlayerAction(ActionType type, Player player)
     {
+
+        if (CryptOfTheNecroDancer.game == null || !CryptOfTheNecroDancer.game.isRunning())
+            return new JudgeResult(false, null);
+
         Judge judge = CryptOfTheNecroDancer.game.judge(player);
 
         showTitleAndActionbar(player, judge);

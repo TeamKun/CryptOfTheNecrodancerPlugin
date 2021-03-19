@@ -25,6 +25,7 @@ public class CryptOfTheNecroDancer extends JavaPlugin
         getServer().getPluginCommand("crypt").setTabCompleter(command);
 
         Bukkit.getPluginManager().registerEvents(new Events(), this);
+        Bukkit.getPluginManager().registerEvents(new GrandEvents(), this);
 
         titleShower = new TitleNotification();
 
