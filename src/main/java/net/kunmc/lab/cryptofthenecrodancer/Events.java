@@ -163,6 +163,9 @@ public class Events implements Listener
         if (targetCount - count < 1)
         {
             block.breakNaturally();
+            block.removeMetadata(CryptOfTheNecroDancer.NAMESPACE_KEY + ":count", CryptOfTheNecroDancer.plugin);
+            block.removeMetadata(CryptOfTheNecroDancer.NAMESPACE_KEY + ":targetCount", CryptOfTheNecroDancer.plugin);
+            block.removeMetadata(CryptOfTheNecroDancer.NAMESPACE_KEY + ":player", CryptOfTheNecroDancer.plugin);
             return;
         }
 
