@@ -3,7 +3,7 @@ package net.kunmc.lab.cryptofthenecrodancer.commands;
 import net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer;
 import net.kunmc.lab.cryptofthenecrodancer.Game;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
-import net.kunmc.lab.cryptofthenecrodancer.utils.URLUtils;
+import net.kunmc.lab.cryptofthenecrodancer.utils.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -39,7 +39,7 @@ public class CommandStart implements CommandBase
         Music music;
         try
         {
-            music = URLUtils.asMusic(new URL(args[0]));
+            music = Utils.asMusic(new URL(args[0]));
         }
         catch (MalformedURLException e)
         {

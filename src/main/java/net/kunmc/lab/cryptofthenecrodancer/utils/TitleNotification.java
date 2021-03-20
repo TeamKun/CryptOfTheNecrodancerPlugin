@@ -43,7 +43,7 @@ public class TitleNotification
             @Override
             public void run()
             {
-                if (!isShowing.contains(uuid) || !subTitleMap.containsKey(uuid))
+                if (!mainTitleMap.containsKey(uuid) && (!isShowing.contains(uuid) || !subTitleMap.containsKey(uuid)))
                 {
                     isShowing.remove(uuid);
                     this.cancel();
@@ -52,7 +52,9 @@ public class TitleNotification
                 if (time++ < 10)
                     return;
                 subTitleMap.remove(uuid);
-                isShowing.remove(uuid);
+
+                if (!mainTitleMap.containsKey(uuid))
+                    isShowing.remove(uuid);
                 this.cancel();
             }
         }.runTaskTimer(CryptOfTheNecroDancer.plugin, 0, 1);
@@ -79,7 +81,7 @@ public class TitleNotification
             @Override
             public void run()
             {
-                if (!isShowing.contains(uuid) || !mainTitleMap.containsKey(uuid))
+                if (!subTitleMap.containsKey(uuid) && (!isShowing.contains(uuid) || !mainTitleMap.containsKey(uuid)))
                 {
                     isShowing.remove(uuid);
                     this.cancel();
@@ -88,7 +90,8 @@ public class TitleNotification
                 if (time++ < 10)
                     return;
                 mainTitleMap.remove(uuid);
-                isShowing.remove(uuid);
+                if (!subTitleMap.containsKey(uuid))
+                    isShowing.remove(uuid);
             }
         }.runTaskTimer(CryptOfTheNecroDancer.plugin, 0, 1);
     }

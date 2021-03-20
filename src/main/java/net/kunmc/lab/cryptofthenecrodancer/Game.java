@@ -5,10 +5,11 @@ import net.kunmc.lab.cryptofthenecrodancer.judger.Judger;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Note;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.junit.internal.builders.IgnoredBuilder;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class Game
     private final List<Player> players;
     private final List<Player> activePlayers;
     private final List<Player> judgedPlayers;
+    private final List<Location> modifiedBlocks;
     private final Lock lock = new ReentrantLock();
     private boolean running;
     private MusicPlayer musicPlayer;
@@ -35,6 +37,7 @@ public class Game
         players = new ArrayList<>(Bukkit.getOnlinePlayers());
         activePlayers = new ArrayList<>();
         judgedPlayers = new ArrayList<>();
+        modifiedBlocks = new ArrayList<>();
         running = false;
         judgeTime1 = -1;
         judgeTime2 = -1;
@@ -59,6 +62,24 @@ public class Game
 
         musicPlayer = null;
         running = false;
+
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                modifiedBlocks.stream()
+                        .parallel()
+                        .forEach(location -> {
+                            location.getWorld().getBlockAt(location).removeMetadata(
+                                    CryptOfTheNecroDancer.NAMESPACE_KEY + ":count", CryptOfTheNecroDancer.plugin);
+                            location.getWorld().getBlockAt(location).removeMetadata(
+                                    CryptOfTheNecroDancer.NAMESPACE_KEY + ":targetCount", CryptOfTheNecroDancer.plugin);
+                            location.getWorld().getBlockAt(location).removeMetadata(
+                                    CryptOfTheNecroDancer.NAMESPACE_KEY + ":player", CryptOfTheNecroDancer.plugin);
+                        });
+            }
+        }.runTaskAsynchronously(CryptOfTheNecroDancer.plugin);
     }
 
     public boolean isRunning()
@@ -78,6 +99,11 @@ public class Game
         {
             lock.unlock();
         }
+    }
+
+    public void blockModify(Location location)
+    {
+        this.modifiedBlocks.add(location);
     }
 
     public void removePlayer(Player player)
@@ -157,7 +183,7 @@ public class Game
                 {
                     if (tick > music.getLength())
                     {
-                        running = false;
+                        stop();
                         return;
                     }
 
