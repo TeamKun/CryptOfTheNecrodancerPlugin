@@ -237,17 +237,25 @@ public class Game
                 return;
             }
 
-            if (tick != 0)
-                bar.setProgress((double) tick / (double)music.getLength());
-                //bar.setProgress(tick / (music.getTimeSignature() * 2d));
-
-            mbar.tick();
-            bar.setTitle(StringUtils.strip(mbar.toString()));
-
             getNotJudgedPlayers()
                     .stream()
                     .parallel()
                     .forEach(p -> Judger.showTitleAndActionbar(p, Judge.BEAT_SKIP));
+
+
+            new BukkitRunnable()
+            {
+                @Override
+                public void run()
+                {
+                    if (tick != 0)
+                        bar.setProgress((double) tick / (double)music.getLength());
+                    //bar.setProgress(tick / (music.getTimeSignature() * 2d));
+                    mbar.tick();
+                    bar.setTitle(StringUtils.strip(mbar.toString()));
+
+                }
+            }.runTaskAsynchronously(CryptOfTheNecroDancer.plugin);
         }
 
         private void play(Player player, int tick)
