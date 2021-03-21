@@ -4,9 +4,14 @@ import net.kunmc.lab.cryptofthenecrodancer.judger.Judge;
 import net.kunmc.lab.cryptofthenecrodancer.judger.Judger;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Note;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -20,6 +25,8 @@ import java.util.stream.Collectors;
 
 public class Game
 {
+    private final BossBar bar;
+    private final MusicBar mbar;
     private final Music music;
     private final List<Player> players;
     private final List<Player> activePlayers;
@@ -34,6 +41,9 @@ public class Game
     public Game(Music music)
     {
         this.music = music;
+        this.bar = Bukkit.createBossBar("", BarColor.GREEN, BarStyle.SEGMENTED_20);
+        this.mbar = new MusicBar(" ", 3, ChatColor.AQUA + "|", ChatColor.RED + "■", 10, MusicBar.Type.RIGHT_TO_LEFT);
+        bar.setVisible(true);
         players = new ArrayList<>(Bukkit.getOnlinePlayers());
         activePlayers = new ArrayList<>();
         judgedPlayers = new ArrayList<>();
@@ -41,6 +51,8 @@ public class Game
         running = false;
         judgeTime1 = -1;
         judgeTime2 = -1;
+
+        players.forEach(this.bar::addPlayer);
     }
 
     public void run()
@@ -62,6 +74,9 @@ public class Game
 
         musicPlayer = null;
         running = false;
+
+        bar.setVisible(false);
+        bar.removeAll();
 
         new BukkitRunnable()
         {
@@ -221,6 +236,13 @@ public class Game
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_COW_BELL, 1.0f, 1.0f);
                 return;
             }
+
+            if (tick != 0)
+                bar.setProgress((double) tick / (double)music.getLength());
+                //bar.setProgress(tick / (music.getTimeSignature() * 2d));
+
+            mbar.tick();
+            bar.setTitle(StringUtils.strip(mbar.toString()));
 
             getNotJudgedPlayers()
                     .stream()
