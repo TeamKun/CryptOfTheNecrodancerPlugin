@@ -3,9 +3,12 @@ package net.kunmc.lab.cryptofthenecrodancer.utils;
 import net.kunmc.lab.cryptofthenecrodancer.CryptOfTheNecroDancer;
 import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.util.Vector;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,4 +76,24 @@ public class Utils
             }
         }
     }
+
+    public static Vector loc2vec(Location from, Location to) {
+        return new Vector((to.getX() - from.getX()), to.getY() - from.getY(), (to.getZ() - from.getZ()));
+    }
+
+    /*public static Vector dir2vec(Location center, Location as)
+    {
+        Vector vecCenter = center.toVector().normalize();
+        Vector vecAs = as.toVector().normalize();
+
+        Vector vecResult = vecAs.subtract(vecCenter);
+
+        //vecResult.setX(vecCenter.getX());
+        //vecResult.setZ(vecCenter.getZ());
+        vecResult.setY(vecResult.getY() + 0.1);
+        vecResult.normalize();
+
+        return vecResult;//.multiply(3);
+
+    }*/
 }
