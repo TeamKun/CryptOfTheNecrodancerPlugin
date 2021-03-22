@@ -13,8 +13,10 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,21 +46,21 @@ public class Game
         this.bar = Bukkit.createBossBar("", BarColor.GREEN, BarStyle.SEGMENTED_20);
         this.mbar = new MusicBar(" ", 3, ChatColor.AQUA + "|", ChatColor.RED + "■", 10, MusicBar.Type.RIGHT_TO_LEFT);
         bar.setVisible(true);
-        players = new ArrayList<>(Bukkit.getOnlinePlayers());
+        players = new ArrayList<>();
         activePlayers = new ArrayList<>();
         judgedPlayers = new ArrayList<>();
         modifiedBlocks = new ArrayList<>();
         running = false;
         judgeTime1 = -1;
         judgeTime2 = -1;
-
-        players.forEach(this.bar::addPlayer);
     }
 
     public void run()
     {
         if (running)
             return;
+
+        Bukkit.getOnlinePlayers().stream().parallel().forEach(this::addPlayer);
 
         Plugin plugin = CryptOfTheNecroDancer.plugin;
         musicPlayer = new MusicPlayer();
@@ -77,6 +79,8 @@ public class Game
 
         bar.setVisible(false);
         bar.removeAll();
+
+        Bukkit.getOnlinePlayers().stream().parallel().forEach(this::removePlayer);
 
         new BukkitRunnable()
         {
@@ -109,6 +113,14 @@ public class Game
         {
             if (!players.contains(player))
                 players.add(player);
+            this.bar.addPlayer(player);
+            player.setWalkSpeed(100);
+            Location playerLocation = player.getLocation();
+
+            playerLocation.setX(Math.round(playerLocation.getX()) + 0.5);
+            playerLocation.setZ(Math.round(playerLocation.getZ() + 0.5));
+
+            player.teleport(playerLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
         }
         finally
         {
@@ -126,6 +138,7 @@ public class Game
         lock.lock();
         try
         {
+            player.setWalkSpeed(20);
             players.remove(player);
             activePlayers.remove(player);
         }
