@@ -114,7 +114,7 @@ public class Game
             if (!players.contains(player))
                 players.add(player);
             this.bar.addPlayer(player);
-            player.setWalkSpeed(0.01f);
+            //player.setWalkSpeed(0.01f);
             Location playerLocation = player.getLocation();
 
             playerLocation.setX(Math.round(playerLocation.getX()) + 0.5);
@@ -138,7 +138,7 @@ public class Game
         lock.lock();
         try
         {
-            player.setWalkSpeed(0.2f);
+            //player.setWalkSpeed(0.2f);
             players.remove(player);
             activePlayers.remove(player);
         }

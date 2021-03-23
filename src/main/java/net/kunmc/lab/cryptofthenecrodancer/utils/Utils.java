@@ -5,6 +5,7 @@ import net.kunmc.lab.cryptofthenecrodancer.nbs.Music;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -77,23 +78,30 @@ public class Utils
         }
     }
 
-    public static Vector loc2vec(Location from, Location to) {
-        return new Vector((to.getX() - from.getX()), to.getY() - from.getY(), (to.getZ() - from.getZ()));
-    }
+    private static final Vector[] definedVectors = {BlockFace.NORTH.getDirection(),
+            BlockFace.EAST.getDirection(),
+            BlockFace.SOUTH.getDirection(),
+            BlockFace.WEST.getDirection()};
+    private static final double limit = 0.5;
 
-    /*public static Vector dir2vec(Location center, Location as)
+
+    public static Vector getMoveVec(Vector moved)
     {
-        Vector vecCenter = center.toVector().normalize();
-        Vector vecAs = as.toVector().normalize();
+        Vector cl = null;
+        double lowestLimit = -Double.MIN_VALUE;
 
-        Vector vecResult = vecAs.subtract(vecCenter);
+        for (Vector vector: definedVectors)
+        {
+            double tempDir = vector.dot(moved);
+            if (tempDir >= limit)
+                return vector;
+            else if (tempDir > lowestLimit)
+            {
+                lowestLimit = tempDir;
+                cl = vector;
+            }
+        }
 
-        //vecResult.setX(vecCenter.getX());
-        //vecResult.setZ(vecCenter.getZ());
-        vecResult.setY(vecResult.getY() + 0.1);
-        vecResult.normalize();
-
-        return vecResult;//.multiply(3);
-
-    }*/
+        return cl;
+    }
 }

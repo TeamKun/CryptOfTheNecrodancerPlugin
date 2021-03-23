@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -93,15 +94,21 @@ public class Events implements Listener
         long last = lastMoveTime.containsKey(event.getPlayer()) ? lastMoveTime.get(event.getPlayer()): 0;
         long current = System.currentTimeMillis();
 
-        if (current - last < 200)
-        {
-            event.setCancelled(true);
+        if (current - last < 500)
             return;
-        }
 
         JudgeResult result = Judger.onPlayerAction(ActionType.MOVE_GROUND, event.getPlayer());
 
-        event.setCancelled(result.isCancel);
+        if (!result.isCancel) //ぴょこぴょこ移動
+        {
+            Vector attemptedDir = event.getTo().clone().subtract(event.getFrom()).toVector().normalize();
+            Vector calced = Utils.getMoveVec(attemptedDir);
+            if (calced == null)
+                return;
+            calced.setY(calced.getY() + 0.5);
+            event.getPlayer().setVelocity(calced);
+        }
+
 
         lastMoveTime.put(event.getPlayer(), current);
     }
