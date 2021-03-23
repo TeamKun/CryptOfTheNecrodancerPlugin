@@ -106,6 +106,7 @@ public class Events implements Listener
             if (calced == null)
                 return;
             calced.setY(calced.getY() + 0.5);
+            calced.multiply(0.5);
             event.getPlayer().setVelocity(calced);
         }
 
@@ -131,8 +132,25 @@ public class Events implements Listener
         if (block == null)
             return;
 
-        if (block.getType() == Material.WATER || block.getType() == Material.LAVA)
-            return;
+        switch (block.getType())
+        {
+            case BARRIER:
+            case BEDROCK:
+            case CHAIN_COMMAND_BLOCK:
+            case COMMAND_BLOCK:
+            case END_GATEWAY:
+            case END_PORTAL:
+            case END_PORTAL_FRAME:
+            case JIGSAW:
+            case MOVING_PISTON:
+            case NETHER_PORTAL:
+            case REPEATING_COMMAND_BLOCK:
+            case STRUCTURE_BLOCK:
+            case WATER:
+            case LAVA:
+                return;
+        }
+
 
         event.setCancelled(true);
 
@@ -155,30 +173,37 @@ public class Events implements Listener
         if (block.hasMetadata(CryptOfTheNecroDancer.NAMESPACE_KEY + ":targetCount"))
             targetCount = Utils.getBlockMeta(block, CryptOfTheNecroDancer.NAMESPACE_KEY + ":targetCount");
         else
-         targetCount = Calculator.calculateBlockAll(block, player.getInventory().getItemInMainHand());
+         targetCount = Calculator.calculateBlock(block);
 
         UUID playerUniqueId = null;
 
         if (block.hasMetadata(CryptOfTheNecroDancer.NAMESPACE_KEY + ":player"))
             playerUniqueId = Utils.getBlockMeta(block, CryptOfTheNecroDancer.NAMESPACE_KEY + ":player");
 
-        count++;
-
         String baseText = ChatColor.GREEN + "破壊まであと %s " + ChatColor.GREEN + "回";
 
+        long breakAmount = Calculator.calculateTool(player.getInventory().getItemInMainHand());
+
+        if (!Calculator.isCorrectTool(player.getInventory().getItemInMainHand(), block.getType()))
+            breakAmount -= breakAmount / 2;
+
+        if (breakAmount > 0)
+            count += breakAmount;
+        else
+            count += 1;
 
         if (targetCount - count < 1)
         {
-            block.breakNaturally();
+            block.breakNaturally(player.getInventory().getItemInMainHand());
             block.removeMetadata(CryptOfTheNecroDancer.NAMESPACE_KEY + ":count", CryptOfTheNecroDancer.plugin);
             block.removeMetadata(CryptOfTheNecroDancer.NAMESPACE_KEY + ":targetCount", CryptOfTheNecroDancer.plugin);
             block.removeMetadata(CryptOfTheNecroDancer.NAMESPACE_KEY + ":player", CryptOfTheNecroDancer.plugin);
             return;
         }
 
-        if (playerUniqueId == null || playerUniqueId != player.getUniqueId())
+        if (playerUniqueId == null/* || playerUniqueId != player.getUniqueId()*/)
         {
-            Utils.setMetadata(block, "count", 1);
+            Utils.setMetadata(block, "count", count);
             Utils.setMetadata(block, "targetCount", targetCount);
             Utils.setMetadata(block, "player", player.getUniqueId());
 

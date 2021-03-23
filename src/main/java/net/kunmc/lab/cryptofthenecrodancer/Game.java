@@ -60,7 +60,7 @@ public class Game
         if (running)
             return;
 
-        Bukkit.getOnlinePlayers().stream().parallel().forEach(this::addPlayer);
+        Bukkit.getOnlinePlayers().stream().forEach(this::addPlayer);
 
         Plugin plugin = CryptOfTheNecroDancer.plugin;
         musicPlayer = new MusicPlayer();

@@ -168,18 +168,6 @@ public class Calculator
         return true;
     }
 
-    public static int calculateBlockAll(Block block, ItemStack tool)
-    {
-        int base = calculateBlock(block);
-
-        int toolCt = calculateTool(tool);
-        if (!isCorrectTool(tool, block.getType()))
-            toolCt -= 10;
-        base -= toolCt;
-
-        return base;
-    }
-
     public static int calculateBlock(Block block)
     {
         if (block.getType() == Material.AIR)
@@ -190,10 +178,10 @@ public class Calculator
     public static int calculateTool(ItemStack item)
     {
         if (item == null || item.getType() == Material.AIR)
-            return 0;
+            return 1;
 
         if (!ItemUtils.isTool(item.getType()))
-            return 0;
+            return 1;
 
         int baseTool = calculatePlainTool(item);
 
