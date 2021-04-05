@@ -25,12 +25,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class Events implements Listener
 {
     private final HashMap<Player, Long> lastMoveTime = new HashMap<>();
+
+    private final ArrayList<Player> ground = new ArrayList<>();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
@@ -77,10 +80,26 @@ public class Events implements Listener
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onGround(PlayerMoveEvent event)
+    {
+        if (!event.getPlayer().isOnGround() && !this.ground.contains(event.getPlayer()))
+        {
+            this.ground.add(event.getPlayer());
+            //event.getPlayer().setWalkSpeed(0);
+        }
+        else if (event.getPlayer().isOnGround())
+        {
+            this.ground.remove(event.getPlayer());
+            //event.getPlayer().setWalkSpeed(0.2f);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event)
     {
         if (CryptOfTheNecroDancer.game == null || !CryptOfTheNecroDancer.game.isRunning())
             return;
+
 
         if (!(event.getPlayer().getGameMode() == GameMode.SURVIVAL || event.getPlayer().getGameMode() == GameMode.ADVENTURE) &&
                 !event.getPlayer().isOnGround())
@@ -97,6 +116,11 @@ public class Events implements Listener
         if (current - last < 500)
             return;
 
+        if (ground.contains(event.getPlayer()))
+            return;
+        else
+            event.setCancelled(true);
+
         JudgeResult result = Judger.onPlayerAction(ActionType.MOVE_GROUND, event.getPlayer());
 
         if (!result.isCancel) //ぴょこぴょこ移動
@@ -105,10 +129,12 @@ public class Events implements Listener
             Vector calced = Utils.getMoveVec(attemptedDir);
             if (calced == null)
                 return;
-            calced.setY(calced.getY() + 0.5);
-            calced.multiply(0.5);
+            calced.multiply(0.9);
+            calced.setY(calced.getY() + 0.1);
             event.getPlayer().setVelocity(calced);
         }
+        else
+            event.setCancelled(true);
 
 
         lastMoveTime.put(event.getPlayer(), current);
