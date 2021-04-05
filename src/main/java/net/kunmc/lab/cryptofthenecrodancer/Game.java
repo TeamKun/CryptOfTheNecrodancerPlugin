@@ -211,8 +211,8 @@ public class Game
                 {
                     if (tick > music.getLength())
                     {
-                        stop();
-                        return;
+                        tick = 0;
+                        continue;
                     }
 
                     players.forEach(player -> {
